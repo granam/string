@@ -4,8 +4,8 @@ Note: requires PHP 5.4+
 
 ```php
 <?php
-use Granam\Strict\String\StringObject;
-use Granam\Strict\String\Exceptions\WrongParameterType;
+use GranamString\StringObject;
+use GranamString\Exceptions\WrongParameterType;
 
 $string = new StringObject('12345');
 
@@ -13,9 +13,9 @@ $string = new StringObject('12345');
 echo $string;
 
 try {
-  new StringObject(12345);
+  new StringObject(fopen('foo'));
 } catch (WrongParameterType $stringException) {
-  // Strict string has to get a string value. Integer is not a string.
+  // Expected scalar or object with \_\_toString method on strict mode, got resource.
   die('Something get wrong: ' . $stringException->getMessage());
 }
 ```
