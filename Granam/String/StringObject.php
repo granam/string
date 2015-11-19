@@ -20,13 +20,4 @@ class StringObject extends Scalar implements StringInterface
             throw new Exceptions\WrongParameterType($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
-
-    /**
-     * @return bool
-     */
-    public function isEmpty()
-    {
-        return strlen($this->getValue()) === 0;
-    }
-
 }

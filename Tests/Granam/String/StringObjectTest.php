@@ -79,18 +79,6 @@ class StringObjectTest extends \PHPUnit_Framework_TestCase
     {
         new StringObject(new \stdClass());
     }
-
-    /**
-     * @test
-     */
-    public function I_can_ask_it_if_it_is_empty()
-    {
-        $emptyString = new StringObject('');
-        $this->assertTrue($emptyString->isEmpty());
-
-        $filledString = new StringObject('some string');
-        $this->assertFalse($filledString->isEmpty());
-    }
 }
 
 /** inner */
