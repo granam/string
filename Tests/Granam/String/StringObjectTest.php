@@ -26,24 +26,30 @@ class StringObjectTest extends \PHPUnit_Framework_TestCase
     public function I_can_create_string_object_from_most_of_types()
     {
         $withInteger = new StringObject($integer = 1);
+        $this->assertSame((string)$integer, $withInteger->getValue());
         $this->assertSame((string)$integer, (string)$withInteger);
 
         $withFloat = new StringObject($float = 1.1);
+        $this->assertSame((string)$float, $withFloat->getValue());
         $this->assertSame((string)$float, (string)$withFloat);
 
         $withFalse = new StringObject($false = false);
+        $this->assertSame((string)$false, $withFalse->getValue());
         $this->assertSame((string)$false, (string)$withFalse);
         $this->assertSame('', (string)$withFalse);
 
         $withTrue = new StringObject($true = true);
+        $this->assertSame((string)$true, $withTrue->getValue());
         $this->assertSame((string)$true, (string)$withTrue);
         $this->assertSame('1', (string)$withTrue);
 
         $withNull = new StringObject($null = null);
+        $this->assertSame((string)$null, $withNull->getValue());
         $this->assertSame((string)$null, (string)$withNull);
         $this->assertSame('', (string)$withNull);
 
         $strictString = new StringObject(new WithToString($string = 'foo'));
+        $this->assertSame($string, $strictString->getValue());
         $this->assertSame($string, (string)$strictString);
     }
 
@@ -72,6 +78,18 @@ class StringObjectTest extends \PHPUnit_Framework_TestCase
     public function I_can_not_create_string_object_from_object()
     {
         new StringObject(new \stdClass());
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_ask_it_if_it_is_empty()
+    {
+        $emptyString = new StringObject('');
+        $this->assertTrue($emptyString->isEmpty());
+
+        $filledString = new StringObject('some string');
+        $this->assertFalse($filledString->isEmpty());
     }
 }
 

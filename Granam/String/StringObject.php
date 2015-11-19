@@ -3,6 +3,7 @@ namespace Granam\String;
 
 use Granam\Scalar\Scalar;
 use Granam\Scalar\Tools\ToString;
+use Granam\Scalar\Tools\Exceptions\WrongParameterType as ToString_WrongParameterType;
 
 class StringObject extends Scalar implements StringInterface
 {
@@ -13,30 +14,19 @@ class StringObject extends Scalar implements StringInterface
     public function __construct($value)
     {
         try {
-            parent::__construct($value);
-        } catch (\Granam\Scalar\Tools\Exceptions\WrongParameterType $exception) {
+            parent::__construct(ToString::toString($value));
+        } catch (ToString_WrongParameterType $exception) {
             // wrapping by a local one
             throw new Exceptions\WrongParameterType($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
     /**
-     * @param mixed $value
-     *
-     * @return string
+     * @return bool
      */
-    protected function castValue($value)
+    public function isEmpty()
     {
-        if (is_string($value)) {
-            return $value;
-        }
-
-        try {
-            return ToString::toString($value);
-        } catch (\Granam\Scalar\Tools\Exceptions\WrongParameterType $exception) {
-            // wrapping exception by local one
-            throw new Exceptions\WrongParameterType($exception->getMessage(), $exception->getCode(), $exception);
-        }
+        return strlen($this->getValue()) === 0;
     }
 
 }
