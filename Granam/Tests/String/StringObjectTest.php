@@ -1,5 +1,5 @@
 <?php
-namespace Granam\Tests\Strict\String;
+namespace Granam\Tests\String;
 
 use Granam\Scalar\Scalar;
 use Granam\String\StringObject;
@@ -10,14 +10,14 @@ class StringObjectTest extends \PHPUnit_Framework_TestCase
     public function can_create_instance()
     {
         $instance = new StringObject('foo');
-        $this->assertNotNull($instance);
+        self::assertNotNull($instance);
     }
 
     /** @test */
     public function is_a_scalar()
     {
         $instance = new StringObject('foo');
-        $this->assertInstanceOf(Scalar::getClass(), $instance);
+        self::assertInstanceOf(Scalar::getClass(), $instance);
     }
 
     /**
@@ -26,31 +26,31 @@ class StringObjectTest extends \PHPUnit_Framework_TestCase
     public function I_can_create_string_object_from_most_of_types()
     {
         $withInteger = new StringObject($integer = 1);
-        $this->assertSame((string)$integer, $withInteger->getValue());
-        $this->assertSame((string)$integer, (string)$withInteger);
+        self::assertSame((string)$integer, $withInteger->getValue());
+        self::assertSame((string)$integer, (string)$withInteger);
 
         $withFloat = new StringObject($float = 1.1);
-        $this->assertSame((string)$float, $withFloat->getValue());
-        $this->assertSame((string)$float, (string)$withFloat);
+        self::assertSame((string)$float, $withFloat->getValue());
+        self::assertSame((string)$float, (string)$withFloat);
 
         $withFalse = new StringObject($false = false);
-        $this->assertSame((string)$false, $withFalse->getValue());
-        $this->assertSame((string)$false, (string)$withFalse);
-        $this->assertSame('', (string)$withFalse);
+        self::assertSame((string)$false, $withFalse->getValue());
+        self::assertSame((string)$false, (string)$withFalse);
+        self::assertSame('', (string)$withFalse);
 
         $withTrue = new StringObject($true = true);
-        $this->assertSame((string)$true, $withTrue->getValue());
-        $this->assertSame((string)$true, (string)$withTrue);
-        $this->assertSame('1', (string)$withTrue);
+        self::assertSame((string)$true, $withTrue->getValue());
+        self::assertSame((string)$true, (string)$withTrue);
+        self::assertSame('1', (string)$withTrue);
 
         $withNull = new StringObject($null = null);
-        $this->assertSame((string)$null, $withNull->getValue());
-        $this->assertSame((string)$null, (string)$withNull);
-        $this->assertSame('', (string)$withNull);
+        self::assertSame((string)$null, $withNull->getValue());
+        self::assertSame((string)$null, (string)$withNull);
+        self::assertSame('', (string)$withNull);
 
         $strictString = new StringObject(new WithToString($string = 'foo'));
-        $this->assertSame($string, $strictString->getValue());
-        $this->assertSame($string, (string)$strictString);
+        self::assertSame($string, $strictString->getValue());
+        self::assertSame($string, (string)$strictString);
     }
 
     /**
@@ -86,10 +86,10 @@ class StringObjectTest extends \PHPUnit_Framework_TestCase
     public function I_can_ask_it_if_it_is_empty()
     {
         $emptyString = new StringObject('');
-        $this->assertTrue($emptyString->isEmpty());
+        self::assertTrue($emptyString->isEmpty());
 
         $filledString = new StringObject('some string');
-        $this->assertFalse($filledString->isEmpty());
+        self::assertFalse($filledString->isEmpty());
     }
 }
 

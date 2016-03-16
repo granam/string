@@ -10,13 +10,16 @@
         processIsolation="false"
         backupGlobals="false"
         colors="true"
-        >
+>
     <testsuite name="all">
-        <directory>./Tests</directory>
+        <directory>./Granam</directory>
     </testsuite>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true" addUncoveredFilesFromWhitelist="true">
             <directory>./Granam</directory>
+            <exclude>
+                <directory>./Granam/Tests</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

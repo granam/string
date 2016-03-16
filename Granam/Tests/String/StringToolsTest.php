@@ -1,5 +1,7 @@
 <?php
-namespace Granam\String;
+namespace Granam\Tests\String;
+
+use Granam\String\StringTools;
 
 class StringToolsTest extends \PHPUnit_Framework_TestCase
 {
