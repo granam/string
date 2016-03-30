@@ -7,10 +7,8 @@ Note: requires PHP 5.4+
 use GranamString\StringObject;
 use GranamString\Exceptions\WrongParameterType;
 
-$string = new StringObject('12345');
-
-// foo
-echo $string;
+$string = new StringObject(12345.678);
+echo $string; // string '12345.678'
 
 try {
   new StringObject(fopen('foo'));
