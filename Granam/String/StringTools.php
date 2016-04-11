@@ -17,9 +17,8 @@ class StringTools extends StrictObject
         $withoutDiacritics = iconv('UTF-8', 'ASCII//TRANSLIT', $nonCharactersReplaced);
         setlocale(LC_CTYPE, $originalLocale);
         $underscored = preg_replace('~[^a-zA-Z0-9]+~', '_', $withoutDiacritics);
-        $lowercased = strtolower($underscored);
 
-        return $lowercased;
+        return strtolower($underscored);
     }
 
     protected static function replaceSpecials($string)
@@ -28,19 +27,18 @@ class StringTools extends StrictObject
     }
 
     /**
-     * @param string $value
+     * @param string $className
      * @return string
      */
-    public static function camelCaseClassToSnakeCase($value)
+    public static function camelToSnakeCaseBasename($className)
     {
-        if (preg_match('~[\\\]?(?<basename>\w+)[^\w_-]*$~', $value, $matches) === 0) {
-            return $value;
+        if (preg_match('~[\\\]?(?<basename>\w+)[^\w_-]*$~', $className, $matches) === 0) {
+            return $className;
         }
         $baseName = $matches['basename'];
         $parts = preg_split('~([A-Z][a-z_]*)~', $baseName, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $underscored = preg_replace('~_{2,}~', '_', implode('_', $parts));
-        $snake_case = strtolower($underscored);
 
-        return $snake_case;
+        return strtolower($underscored);
     }
 }
