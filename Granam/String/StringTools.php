@@ -41,4 +41,28 @@ class StringTools extends StrictObject
 
         return strtolower($underscored);
     }
+
+    /**
+     * This method originates from Dropbox,
+     * @link http://dropbox.github.io/dropbox-sdk-php/api-docs/v1.1.x/source-class-Dropbox.Util.html#14-32
+     *
+     * If the given string begins with the UTF-8 BOM (byte order mark), remove it and
+     * return whatever is left. Otherwise, return the original string untouched.
+     *
+     * Though it's not recommended for UTF-8 to have a BOM, the standard allows it to
+     * support software that isn't Unicode-aware.
+     *
+     * @param string $string
+     *    A UTF-8 encoded string.
+     *
+     * @return string
+     */
+    public static function stripUtf8Bom($string)
+    {
+        if (\substr_compare($string, "\xEF\xBB\xBF", 0, 3) === 0) {
+            $string = \substr($string, 3);
+        }
+
+        return $string;
+    }
 }

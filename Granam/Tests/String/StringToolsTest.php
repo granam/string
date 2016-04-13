@@ -48,4 +48,20 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             ['.,*#@ ...  &', '.,*#@ ...  &'],
         ];
     }
+
+    /**
+     * @test
+     */
+    public function I_can_strip_BOM_from_utf8_string()
+    {
+        $utf8String = mb_convert_encoding('Příliš', 'UTF-8');
+        self::assertSame(
+            $utf8String,
+            StringTools::stripUtf8Bom("\xEF\xBB\xBF{$utf8String}")
+        );
+        self::assertSame(
+            $utf8String,
+            StringTools::stripUtf8Bom($utf8String)
+        );
+    }
 }
