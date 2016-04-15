@@ -6,18 +6,14 @@ use Granam\String\StringObject;
 
 class StringObjectTest extends \PHPUnit_Framework_TestCase
 {
-    /** @test */
-    public function can_create_instance()
-    {
-        $instance = new StringObject('foo');
-        self::assertNotNull($instance);
-    }
 
-    /** @test */
-    public function is_a_scalar()
+    /**
+     * @test
+     */
+    public function I_can_use_it_as_scalar_object()
     {
-        $instance = new StringObject('foo');
-        self::assertInstanceOf(Scalar::getClass(), $instance);
+        $stringObject = new StringObject('foo');
+        self::assertInstanceOf(Scalar::getClass(), $stringObject);
     }
 
     /**
@@ -43,14 +39,40 @@ class StringObjectTest extends \PHPUnit_Framework_TestCase
         self::assertSame((string)$true, (string)$withTrue);
         self::assertSame('1', (string)$withTrue);
 
-        $withNull = new StringObject($null = null);
-        self::assertSame((string)$null, $withNull->getValue());
-        self::assertSame((string)$null, (string)$withNull);
-        self::assertSame('', (string)$withNull);
-
         $strictString = new StringObject(new WithToString($string = 'foo'));
         self::assertSame($string, $strictString->getValue());
         self::assertSame($string, (string)$strictString);
+    }
+
+    /**
+     * @test
+     */
+    public function I_get_empty_string__from_null_if_not_strict()
+    {
+        $withNull = new StringObject(null, false /* not strict */);
+        self::assertSame((string)null, $withNull->getValue());
+        self::assertSame((string)null, (string)$withNull);
+        self::assertSame('', (string)$withNull);
+    }
+
+    /**
+     * @test
+     * @expectedException \Granam\String\Exceptions\WrongParameterType
+     * @expectedExceptionMessageRegExp ~got NULL$~
+     */
+    public function I_can_not_use_null_by_default()
+    {
+        new StringObject(null);
+    }
+
+    /**
+     * @test
+     * @expectedException \Granam\String\Exceptions\WrongParameterType
+     * @expectedExceptionMessageRegExp ~got NULL$~
+     */
+    public function I_can_not_use_null_if_strict()
+    {
+        new StringObject(null, true /* strict*/);
     }
 
     /**
@@ -90,6 +112,10 @@ class StringObjectTest extends \PHPUnit_Framework_TestCase
 
         $filledString = new StringObject('some string');
         self::assertFalse($filledString->isEmpty());
+
+        $withWhiteCharacters = new StringObject("\t\n\r\r\t  \t");
+        self::assertFalse($withWhiteCharacters->isEmpty());
+        self::assertTrue($withWhiteCharacters->isEmpty(true /* trim */));
     }
 }
 

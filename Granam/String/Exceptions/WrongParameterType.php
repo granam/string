@@ -1,7 +1,7 @@
 <?php
 namespace Granam\String\Exceptions;
 
-class WrongParameterType extends \Granam\Scalar\Exceptions\WrongParameterType implements Runtime
+class WrongParameterType extends \Granam\Scalar\Tools\Exceptions\WrongParameterType implements Runtime
 {
 
 }
