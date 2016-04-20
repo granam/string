@@ -44,8 +44,27 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             [__CLASS__, 'string_tools_test'],
             [__FUNCTION__, 'provide_value_to_snake_case'],
             ['IHave_CombinationsFOO', 'i_have_combinations_f_o_o'],
-            ['.,*#@azAZ  O_K...  &', 'o_k'],
+            ['.,*#@azAZ  O_K...  & KO', 'o_k'],
             ['.,*#@ ...  &', '.,*#@ ...  &'],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider provideValueNameAndGetter
+     * @param string $valueName
+     * @param string $expectedGetter
+     */
+    public function I_can_get_getter_for_any_name($valueName, $expectedGetter)
+    {
+        self::assertSame($expectedGetter, StringTools::assembleGetterForName($valueName));
+    }
+
+    public function provideValueNameAndGetter()
+    {
+        return [
+            [__CLASS__, 'getStringToolsTest'],
+            ["\n\t Dřípatka\\horská ?", 'getHorska'],
         ];
     }
 

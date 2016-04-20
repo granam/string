@@ -32,7 +32,7 @@ class StringTools extends StrictObject
      */
     public static function camelToSnakeCaseBasename($className)
     {
-        if (preg_match('~[\\\]?(?<basename>\w+)[^\w_-]*$~', $className, $matches) === 0) {
+        if (preg_match('~[\\\]?(?<basename>\w+)[^\w_-]*$~u', $className, $matches) === 0) {
             return $className;
         }
         $baseName = $matches['basename'];
@@ -40,6 +40,18 @@ class StringTools extends StrictObject
         $underscored = preg_replace('~_{2,}~', '_', implode('_', $parts));
 
         return strtolower($underscored);
+    }
+
+    public static function assembleGetterForName($valueName)
+    {
+        return 'get' . implode(
+            array_map(
+                function ($namePart) {
+                    return ucfirst($namePart);
+                },
+                explode('_', self::toConstant(self::camelToSnakeCaseBasename($valueName)))
+            )
+        );
     }
 
     /**
