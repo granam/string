@@ -44,7 +44,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             [__CLASS__, 'string_tools_test'],
             [__FUNCTION__, 'provide_value_to_snake_case'],
             ['IHave_CombinationsFOO', 'i_have_combinations_f_o_o'],
-            ['.,*#@azAZ  O_K...  & KO', 'o_k'],
+            ['.,*#@azAZ  O_K...  & K.O.', '.,*#@az_a_z_  _o_k_...  & _k_._o_.'], // the function is not for a constant name
             ['.,*#@ ...  &', '.,*#@ ...  &'],
         ];
     }

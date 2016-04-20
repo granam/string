@@ -32,10 +32,10 @@ class StringTools extends StrictObject
      */
     public static function camelToSnakeCaseBasename($className)
     {
-        if (preg_match('~[\\\]?(?<basename>\w+)[^\w_-]*$~u', $className, $matches) === 0) {
-            return $className;
+        $baseName = $className;
+        if (preg_match('~(?<basename>[^\\\]+)$~u', $className, $matches) > 0) {
+            $baseName = $matches['basename'];
         }
-        $baseName = $matches['basename'];
         $parts = preg_split('~([A-Z][a-z_]*)~', $baseName, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $underscored = preg_replace('~_{2,}~', '_', implode('_', $parts));
 
