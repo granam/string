@@ -44,14 +44,29 @@ class StringTools extends StrictObject
 
     public static function assembleGetterForName($valueName, $prefix = 'get')
     {
-        return $prefix . implode(
+        return self::assembleMethodName($valueName, $prefix);
+    }
+
+    public static function assembleSetterForName($valueName, $prefix = 'set')
+    {
+        return self::assembleMethodName($valueName, $prefix);
+    }
+
+    public static function assembleMethodName($fromValue, $prefix = '')
+    {
+        $methodName = implode(
             array_map(
                 function ($namePart) {
                     return ucfirst($namePart);
                 },
-                explode('_', self::toConstant(self::camelToSnakeCaseBasename($valueName)))
+                explode('_', self::toConstant(self::camelToSnakeCaseBasename($fromValue)))
             )
         );
+        if ($prefix === '') {
+            return lcfirst($methodName);
+        }
+
+        return $prefix . $methodName;
     }
 
     /**

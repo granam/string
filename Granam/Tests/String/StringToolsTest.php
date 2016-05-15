@@ -76,6 +76,40 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @dataProvider provideValueNameAndSetter
+     * @param string $valueName
+     * @param string $expectedSetter
+     * @param string|null $prefix
+     */
+    public function I_can_get_setter_for_any_name($valueName, $expectedSetter, $prefix = null)
+    {
+        if ($prefix === null) {
+            self::assertSame($expectedSetter, StringTools::assembleSetterForName($valueName));
+        } else {
+            self::assertSame($expectedSetter, StringTools::assembleSetterForName($valueName, $prefix));
+        }
+    }
+
+    public function provideValueNameAndSetter()
+    {
+        return [
+            [__CLASS__, 'setStringToolsTest'],
+            ["\n\t Dřípatka\\horská ?", 'setHorska'],
+            ['small-ukulele', 'reserveSmallUkulele', 'reserve']
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_create_any_method_name()
+    {
+        self::assertSame('stringToolsTest', StringTools::assembleMethodName(__CLASS__));
+        self::assertSame('fooStringToolsTest', StringTools::assembleMethodName(__CLASS__, 'foo'));
+    }
+
+    /**
+     * @test
      */
     public function I_can_strip_BOM_from_utf8_string()
     {
