@@ -42,9 +42,9 @@ class StringTools extends StrictObject
         return strtolower($underscored);
     }
 
-    public static function assembleGetterForName($valueName)
+    public static function assembleGetterForName($valueName, $prefix = 'get')
     {
-        return 'get' . implode(
+        return $prefix . implode(
             array_map(
                 function ($namePart) {
                     return ucfirst($namePart);

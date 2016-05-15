@@ -54,10 +54,15 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
      * @dataProvider provideValueNameAndGetter
      * @param string $valueName
      * @param string $expectedGetter
+     * @param string|null $prefix
      */
-    public function I_can_get_getter_for_any_name($valueName, $expectedGetter)
+    public function I_can_get_getter_for_any_name($valueName, $expectedGetter, $prefix = null)
     {
-        self::assertSame($expectedGetter, StringTools::assembleGetterForName($valueName));
+        if ($prefix === null) {
+            self::assertSame($expectedGetter, StringTools::assembleGetterForName($valueName));
+        } else {
+            self::assertSame($expectedGetter, StringTools::assembleGetterForName($valueName, $prefix));
+        }
     }
 
     public function provideValueNameAndGetter()
@@ -65,6 +70,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
         return [
             [__CLASS__, 'getStringToolsTest'],
             ["\n\t Dřípatka\\horská ?", 'getHorska'],
+            ['small-ukulele', 'isSmallUkulele', 'is']
         ];
     }
 
