@@ -35,7 +35,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
      */
     public function I_can_turn_to_snake_case_anything($toConvert, $expectedResult)
     {
-        self::assertSame($expectedResult, StringTools::camelToSnakeCaseBasename($toConvert));
+        self::assertSame($expectedResult, StringTools::camelCaseToSnakeCasedBasename($toConvert));
     }
 
     public function provideValueToSnakeCase()

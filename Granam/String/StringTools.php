@@ -30,7 +30,7 @@ class StringTools extends StrictObject
      * @param string $className
      * @return string
      */
-    public static function camelToSnakeCaseBasename($className)
+    public static function camelCaseToSnakeCasedBasename($className)
     {
         $baseName = $className;
         if (preg_match('~(?<basename>[^\\\]+)$~u', $className, $matches) > 0) {
@@ -59,7 +59,7 @@ class StringTools extends StrictObject
                 function ($namePart) {
                     return ucfirst($namePart);
                 },
-                explode('_', self::toConstant(self::camelToSnakeCaseBasename($fromValue)))
+                explode('_', self::toConstant(self::camelCaseToSnakeCasedBasename($fromValue)))
             )
         );
         if ($prefix === '') {
