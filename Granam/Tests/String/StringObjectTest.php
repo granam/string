@@ -58,26 +58,6 @@ class StringObjectTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException \Granam\String\Exceptions\WrongParameterType
-     * @expectedExceptionMessageRegExp ~got NULL$~
-     */
-    public function I_can_not_use_null_by_default()
-    {
-        new StringObject(null);
-    }
-
-    /**
-     * @test
-     * @expectedException \Granam\String\Exceptions\WrongParameterType
-     * @expectedExceptionMessageRegExp ~got NULL$~
-     */
-    public function I_can_not_use_null_if_strict()
-    {
-        new StringObject(null, true /* strict*/);
-    }
-
-    /**
-     * @test
-     * @expectedException \Granam\String\Exceptions\WrongParameterType
      */
     public function I_can_not_create_string_object_from_array()
     {

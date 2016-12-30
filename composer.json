@@ -21,13 +21,13 @@
   },
   "require": {
     "php": ">=5.4",
-    "granam/strict-object": "dev-master",
-    "granam/scalar": "dev-master",
-    "granam/exception-hierarchy": "dev-master"
+    "granam/strict-object": "^1.2",
+    "granam/scalar": "^1.1"
   },
   "require-dev": {
     "phpunit/phpunit": ">=4.4",
     "mockery/mockery": "dev-master",
+    "granam/exception-hierarchy": "dev-master",
     "ext-mbstring": "*"
   },
   "minimum-stability": "dev",
