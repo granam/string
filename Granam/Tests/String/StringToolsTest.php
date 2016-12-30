@@ -7,16 +7,44 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
+     * @dataProvider provideValuesToRemoveDiacritics
+     * @param string $value
+     * @param string $expectedResult
+     */
+    public function I_can_remove_diacritics_from_any_string($value, $expectedResult)
+    {
+        self::assertSame($expectedResult, StringTools::removeDiacritics($value));
+    }
+
+    public function provideValuesToRemoveDiacritics()
+    {
+        /** For list of all pangrams see great @link http://clagnut.com/blog/2380/ */
+        return [
+            ['Příliš žluťoučký kůň úpěl ďábelské ódy', 'Prilis zlutoucky kun upel dabelske ody'], // Czech
+            ['Høj bly gom vandt fræk sexquiz på wc', 'Hoj bly gom vandt fraek sexquiz pa wc'], // Danish
+            [ // Finnish
+                'Fahrenheit ja Celsius yrjösivät Åsan backgammon-peliin, Volkswagenissa, daiquirin ja ZX81:n yhteisvaikutuksesta',
+                'Fahrenheit ja Celsius yrjosivat Asan backgammon-peliin, Volkswagenissa, daiquirin ja ZX81:n yhteisvaikutuksesta'
+            ],
+            [ // French
+                'Voix ambiguë d’un cœur qui au zéphyr préfère les jattes de kiwi',
+                'Voix ambigue d’un cceur qui au zephyr prefere les jattes de kiwi'
+            ]
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider provideValuesToMakeConstant
      * @param string $toConstant
      * @param string $asConstant
-     * @dataProvider provideValuesForAndLikeConstant
      */
     public function I_can_convert_any_string_to_constant_like_value($toConstant, $asConstant)
     {
         self::assertSame($asConstant, StringTools::toConstant($toConstant));
     }
 
-    public function provideValuesForAndLikeConstant()
+    public function provideValuesToMakeConstant()
     {
         /** For list of all pangrams see great @link http://clagnut.com/blog/2380/ */
         return [
