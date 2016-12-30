@@ -40,7 +40,7 @@ class StringTools extends StrictObject
         $nonCharactersReplaced = preg_replace('~\W+~u', '_', $trimmed);
         $underscored = preg_replace('~[^a-zA-Z0-9]+~', '_', $nonCharactersReplaced);
 
-        return strtolower($underscored);
+        return trim(strtolower($underscored), '_');
     }
 
     /**

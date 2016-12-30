@@ -48,6 +48,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
     {
         /** For list of all pangrams see great @link http://clagnut.com/blog/2380/ */
         return [
+            ['¿Quién es?', 'quien_es'], // surrounding non-characters are just removed, not translated to underscores
             ['Příliš žluťoučký kůň úpěl ďábelské ódy', 'prilis_zlutoucky_kun_upel_dabelske_ody'], // Czech
             ['Høj bly gom vandt fræk sexquiz på wc', 'hoj_bly_gom_vandt_fraek_sexquiz_pa_wc'], // Danish
             ['Fahrenheit ja Celsius yrjösivät Åsan backgammon-peliin, Volkswagenissa, daiquirin ja ZX81:n yhteisvaikutuksesta', 'fahrenheit_ja_celsius_yrjosivat_asan_backgammon_peliin_volkswagenissa_daiquirin_ja_zx81_n_yhteisvaikutuksesta'], // Finnish

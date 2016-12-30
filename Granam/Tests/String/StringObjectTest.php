@@ -47,7 +47,7 @@ class StringObjectTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function I_get_empty_string__from_null_if_not_strict()
+    public function I_get_empty_string_from_null_if_not_strict()
     {
         $withNull = new StringObject(null, false /* not strict */);
         self::assertSame((string)null, $withNull->getValue());
