@@ -15,7 +15,7 @@ class StringTools extends StrictObject
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $value = ToString::toString($value);
-        $specialsReplaced = self::flattenSpecials($value);
+        $specialsReplaced = self::replaceSpecials($value);
         preg_match_all('~(?<words>\w*)(?<nonWords>\W*)~u', $specialsReplaced, $matches);
         $originalLocale = setlocale(LC_CTYPE, 0);
         $withoutDiacritics = '';
@@ -47,9 +47,13 @@ class StringTools extends StrictObject
      * @param $string
      * @return string
      */
-    protected static function flattenSpecials($string)
+    protected static function replaceSpecials($string)
     {
-        return str_replace(['ø', 'æ', 'œ'], ['o', 'ae', 'ce'], $string);
+        return str_replace(
+            ['đ', 'ß', 'ð', 'þ', 'ł', 's̱', '̱', '̤', '̩', 'æ', 'œ', 'ə', 'ı', 'ʿ', 'ʾ'],
+            ['d', 'ss', 'd', 'b', 'l', 's', '', '', '', 'ae', 'ce', 'e', 'i', '’', '’'],
+            $string
+        );
     }
 
     /**
