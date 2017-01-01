@@ -26,11 +26,11 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             ],
             [ // Azeri
                 'Zəfər, jaketini də papağını da götür, bu axşam hava çox soyuq olacaq.',
-                'Zefer, jaketini de papagini da gotur, bu axsam hava cox soyuq olacaq.',
+                'Zefer, jaketini de papagini da goetuer, bu axsam hava cox soyuq olacaq.',
             ],
             [ // Breton
                 'Yec’hed mat Jakez ! Skarzhit ar gwerennoù-mañ, kavet e vo gwin betek fin ho puhez.',
-                'Yec’hed mat Jakez ! Skarzhit ar gwerennou-man, kavet e vo gwin betek fin ho puhez.',
+                'Yec’hed mat Jakez ! Skarzhit ar gwerennou-many, kavet e vo gwin betek fin ho puhez.',
             ],
             [ // Catalan
                 'Jove xef, porti whisky amb quinze glaçons d’hidrogen, coi!',
@@ -44,7 +44,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             ['Eble ĉiu kvazaŭ-deca fuŝĥoraĵo ĝojigos homtipon.', 'Eble ciu kvazau-deca fushorajo gojigos homtipon.'], // Esperanto
             [ // Estonian
                 'Põdur Zagrebi tšellomängija-följetonist Ciqo külmetas kehvas garaažis',
-                'Podur Zagrebi tsellomangija-foljetonist Ciqo kulmetas kehvas garaazis',
+                'Podur Zagrebi tsellomaengija-foeljetonist Ciqo kuelmetas kehvas garaazis',
             ],
             [/** well, this is english, @link http://clagnut.com/blog/2380/#Perfect_pangrams_in_English_.2826_letters.29 */
                 'Zing, dwarf jocks vex lymph, Qutb.',
@@ -54,27 +54,27 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             ['Příliš žluťoučký kůň úpěl ďábelské ódy', 'Prilis zlutoucky kun upel dabelske ody'], // Czech
             [ // Finnish
                 'Fahrenheit ja Celsius yrjösivät Åsan backgammon-peliin, Volkswagenissa, daiquirin ja ZX81:n yhteisvaikutuksesta',
-                'Fahrenheit ja Celsius yrjosivat Asan backgammon-peliin, Volkswagenissa, daiquirin ja ZX81:n yhteisvaikutuksesta',
+                'Fahrenheit ja Celsius yrjoesivaet Asan backgammon-peliin, Volkswagenissa, daiquirin ja ZX81:n yhteisvaikutuksesta',
             ],
             [ // Finnish
                 'Törkylempijävongahdus',
-                'Torkylempijavongahdus',
+                'Toerkylempijaevongahdus',
             ],
             [ // French
                 'Voix ambiguë d’un cœur qui au zéphyr préfère les jattes de kiwi',
-                'Voix ambigue d’un cceur qui au zephyr prefere les jattes de kiwi',
+                'Voix ambigue d’un coeur qui au zephyr prefere les jattes de kiwi',
             ],
             [ // German
                 'Falsches Üben von Xylophonmusik quält jeden größeren Zwerg',
-                'Falsches Uben von Xylophonmusik qualt jeden grosseren Zwerg',
+                'Falsches Ueben von Xylophonmusik quaelt jeden groesseren Zwerg',
             ],
             [ // Hungarian
                 'Jó foxim és don Quijote húszwattos lámpánál ülve egy paár bűvös cipőt készít.',
-                'Jo foxim es don Quijote huszwattos lampanal ulve egy paar buvos cipot keszit.',
+                'Jo foxim es don Quijote huszwattos lampanal uelve egy paar buvoes cipot keszit.',
             ],
             [ // Icelandic
                 'Kæmi ný öxi hér, ykist þjófum nú bæði víl og ádrepa.',
-                'Kaemi ny oxi her, ykist bjofum nu baedi vil og adrepa.',
+                'Kaemi ny oexi her, ykist tjofum nu baedi vil og adrepa.',
             ],
             [ // Igbo
                 'Nne, nna, wepụ he’l’ụjọ dum n’ime ọzụzụ ụmụ, vufesi obi nye Chukwu, ṅụrịanụ, gbakọọnụ kpaa, kwee ya ka o guzoshie ike; ọ ghaghị ito, nwapụta ezi agwa.',
@@ -98,7 +98,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             ],
             [ // Mapudungun
                 'Ngütram minchetu apochiküyeṉ: ñidol che mamüll ka rag kushe ḻafkeṉ mew.',
-                'Ngutram minchetu apochikuyen: nidol che mamull ka rag kushe lafken mew.',
+                'Nguetram minchetu apochikueyen: nyidol che mamuell ka rag kushe lafken mew.',
             ],
             [ // Norwegian
                 'Vår sære Zulu fra badeøya spilte jo whist og quickstep i min taxi.',
@@ -110,7 +110,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             ],
             [ // Portuguese
                 'Luís argüia à Júlia que «brações, fé, chá, óxido, pôr, zângão» eram palavras do português.',
-                'Luis arguia a Julia que «bracoes, fe, cha, oxido, por, zangao» eram palavras do portugues.',
+                'Luis argueia a Julia que «bracoes, fe, cha, oxido, por, zangao» eram palavras do portugues.',
             ],
             [ // Romanian
                 'Muzicologă în bej vând whisky și tequila, preț fix.',
@@ -126,7 +126,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             ],
             [ // Slovak
                 'Kŕdeľ šťastných ďatľov učí pri ústí Váhu mĺkveho koňa obhrýzať kôru a žrať čerstvé mäso.',
-                'Krdel stastnych datlov uci pri usti Vahu mlkveho kona obhryzat koru a zrat cerstve maso.',
+                'Krdel stastnych datlov uci pri usti Vahu mlkveho kona obhryzat koru a zrat cerstve maeso.',
             ],
             [ // Slovenian
                 'Hišničin bratec vzgaja polže pod fikusom.',
@@ -134,15 +134,15 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             ],
             [ // Spanish
                 'Benjamín pidió una bebida de kiwi y fresa; Noé, sin vergüenza, la más exquisita champaña del menú.',
-                'Benjamin pidio una bebida de kiwi y fresa; Noe, sin verguenza, la mas exquisita champana del menu.',
+                'Benjamin pidio una bebida de kiwi y fresa; Noe, sin vergueenza, la mas exquisita champanya del menu.',
             ],
             [ // Swedish
                 'Yxskaftbud, ge vår WC-zonmö IQ-hjälp.',
-                'Yxskaftbud, ge var WC-zonmo IQ-hjalp.',
+                'Yxskaftbud, ge var WC-zonmoe IQ-hjaelp.',
             ],
             [ // Turkish
                 'Pijamalı hasta yağız şoföre çabucak güvendi.',
-                'Pijamali hasta yagiz sofore cabucak guvendi.',
+                'Pijamali hasta yagiz sofoere cabucak guevendi.',
             ],
             [ // Urdu
                 'Ṭhanḍ meṉ, ek qaḥat̤-zadah gāʾoṉ se guẕarte waqt ek ciṛciṛe, bā-ʾas̱ar o-fārig̱ẖ s̱ẖaḵẖṣ ko baʿẓ jal-parī numā aẕẖdahe naz̤ar āʾe.',
@@ -150,7 +150,7 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             ],
             [ // Uyghur
                 'Awu bir jüp xoraz Fransiyening Parizh shehrige yëqin taghqa köchelmidi.',
-                'Awu bir jup xoraz Fransiyening Parizh shehrige yeqin taghqa kochelmidi.',
+                'Awu bir juep xoraz Fransiyening Parizh shehrige yeqin taghqa koechelmidi.',
             ],
             [ // Yoruba
                 'Ìwò̩fà ń yò̩ séji tó gbojúmó̩, ó hàn pákànpò̩ gan-an nis̩é̩ rè̩ bó dò̩la.',
@@ -159,6 +159,10 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             [ // Welsh
                 'Parciais fy jac codi baw hud llawn dŵr ger tŷ Mabon.',
                 'Parciais fy jac codi baw hud llawn dwr ger ty Mabon.',
+            ],
+            [ /** @link http://ahinea.com/en/tech/accented-translate.html */
+                'ÐĐðđĦħ-ıĸĿŁŀł-ŊŉŋØøſ-ÞŦþŧ',
+                'DDddHh-ikLLll-NʼnnOos-TTtt'
             ],
             [/** @link http://getemoji.com/ */
                 '😀 😃 😄 😁 😆 😅 😂',
@@ -186,8 +190,8 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             ['Zing, dwarf jocks vex lymph, Qutb.', 'zing_dwarf_jocks_vex_lymph_qutb'], /** well, this is english, @link http://clagnut.com/blog/2380/#Perfect_pangrams_in_English_.2826_letters.29 */
             ['Příliš žluťoučký kůň úpěl ďábelské ódy', 'prilis_zlutoucky_kun_upel_dabelske_ody'], // Czech
             ['Høj bly gom vandt fræk sexquiz på wc', 'hoj_bly_gom_vandt_fraek_sexquiz_pa_wc'], // Danish
-            ['Fahrenheit ja Celsius yrjösivät Åsan backgammon-peliin, Volkswagenissa, daiquirin ja ZX81:n yhteisvaikutuksesta', 'fahrenheit_ja_celsius_yrjosivat_asan_backgammon_peliin_volkswagenissa_daiquirin_ja_zx81_n_yhteisvaikutuksesta'], // Finnish
-            ['Voix ambiguë d’un cœur qui au zéphyr préfère les jattes de kiwi', 'voix_ambigue_d_un_cceur_qui_au_zephyr_prefere_les_jattes_de_kiwi'], // French
+            ['Fahrenheit ja Celsius yrjösivät Åsan backgammon-peliin, Volkswagenissa, daiquirin ja ZX81:n yhteisvaikutuksesta', 'fahrenheit_ja_celsius_yrjoesivaet_asan_backgammon_peliin_volkswagenissa_daiquirin_ja_zx81_n_yhteisvaikutuksesta'], // Finnish
+            ['Voix ambiguë d’un cœur qui au zéphyr préfère les jattes de kiwi', 'voix_ambigue_d_un_coeur_qui_au_zephyr_prefere_les_jattes_de_kiwi'], // French
         ];
     }
 

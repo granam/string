@@ -15,7 +15,7 @@ class StringTools extends StrictObject
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $value = ToString::toString($value);
-        $specialsReplaced = self::replaceSpecials($value);
+        $specialsReplaced = static::replaceSpecials($value);
         preg_match_all('~(?<words>\w*)(?<nonWords>\W*)~u', $specialsReplaced, $matches);
         $originalLocale = setlocale(LC_CTYPE, 0);
         $withoutDiacritics = '';
@@ -24,25 +24,13 @@ class StringTools extends StrictObject
         ini_set('error_reporting', $originalErrorReporting | E_NOTICE);
         /** @noinspection ForeachSourceInspection */
         foreach ($matches['words'] as $index => $word) {
-            $wordWithoutDiacritics = @iconv('UTF-8', 'ASCII//TRANSLIT', $word);
-            $lastError = error_get_last();
-            if ($lastError && $lastError['file'] === __FILE__
-                && $lastError['message'] === 'iconv(): Detected an illegal character in input string'
-            ) {
-                $wordWithoutDiacritics = '';
-                preg_match_all('~\w~u', $word, $letters);
-                foreach ($letters[0] as $letter) {
-                    $convertedLetter = @iconv('UTF-8', 'ASCII//TRANSLIT', $letter);
-                    if ($convertedLetter === false) {
-                        // this error also overwrites previous with iconv(), which is important for previous condition
-                        trigger_error(
-                            "Could not convert character '{$letter}', using '🤣' instead",
-                            E_USER_WARNING // warning level, therefore original error reporting can control it
-                        );
-                        $convertedLetter = '🤣';
-                    }
-                    $wordWithoutDiacritics .= $convertedLetter;
-                }
+            if (class_exists(\Normalizer::class)) {
+                // maps special characters (characters with diacritics) on their base-character followed by the diacritical mark
+                // example:  Ú => U´,  á => a`
+                $withMovedMark = \Normalizer::normalize($word, \Normalizer::FORM_KD);
+                $wordWithoutDiacritics = preg_replace('~\pM~u', '', $withMovedMark); // removes diacritics (moved marks)
+            } else {
+                $wordWithoutDiacritics = static::removeDiacriticsFallback($word);
             }
             $withoutDiacritics .= $wordWithoutDiacritics . $matches['nonWords'][$index];
         }
@@ -50,6 +38,55 @@ class StringTools extends StrictObject
         setlocale(LC_CTYPE, $originalLocale);
 
         return $withoutDiacritics;
+    }
+
+    /**
+     * @param $string
+     * @return string
+     */
+    protected static function replaceSpecials($string)
+    {
+        return str_replace(
+            ['Ð', 'ð', 'Ŀ', 'ŀ', 'Ł', 'ł', 'S̱', 's̱', 'Đ', 'đ', 'ß', 'Ħ', 'ħ', '̱', '̤', '̩', 'Ä', 'ä', 'Æ', 'æ', 'Œ', 'œ',
+                'Þ', 'þ', 'Ŧ', 'ŧ', 'ĸ', 'Ə', 'ə', 'I', 'ı', 'Ö', 'ö', 'Ø', 'ø', 'Ñ', 'ñ', 'Ŋ', 'ŋ',
+                'Ÿ', 'ÿ', 'Ü', 'ü', 'Ĳ', 'ĳ', 'ʿ', 'ʾ',
+            ],
+            ['D', 'd', 'L', 'l', 'L', 'l', 'S', 's', 'D', 'd', 'ss', 'H', 'h', '', '', '', 'Ae', 'ae', 'Ae', 'ae', 'Oe', 'oe',
+                'T', 't', 'T', 't', 'k', 'E', 'e', 'I', 'i', 'Oe', 'oe', 'O', 'o', 'Ny', 'ny', 'N', 'n',
+                'Yu', 'yu', 'Ue', 'ue', 'IJ', 'ij', '’', '’',
+            ],
+            $string
+        );
+    }
+
+    /**
+     * @param string $word
+     * @return string
+     */
+    protected static function removeDiacriticsFallback($word)
+    {
+        $wordWithoutDiacritics = @iconv('UTF - 8', 'ASCII//TRANSLIT', $word);
+        $lastError = error_get_last();
+        if ($lastError && $lastError['file'] === __FILE__
+            && $lastError['message'] === 'iconv(): Detected an illegal character in input string'
+        ) {
+            $wordWithoutDiacritics = '';
+            preg_match_all('~\w~u', $word, $letters);
+            foreach ($letters[0] as $letter) {
+                $convertedLetter = @iconv('UTF-8', 'ASCII//TRANSLIT', $letter);
+                if ($convertedLetter === false) {
+                    // this error also overwrites previous with iconv(), which is important for previous condition
+                    trigger_error(
+                        "Could not convert character '{$letter}', using '🤣' instead",
+                        E_USER_WARNING // warning level, therefore original error reporting can control it
+                    );
+                    $convertedLetter = '🤣';
+                }
+                $wordWithoutDiacritics .= $convertedLetter;
+            }
+        }
+
+        return $wordWithoutDiacritics;
     }
 
     /**
@@ -64,19 +101,6 @@ class StringTools extends StrictObject
         $underscored = preg_replace('~[^a-zA-Z0-9]+~', '_', $nonCharactersReplaced);
 
         return trim(strtolower($underscored), '_');
-    }
-
-    /**
-     * @param $string
-     * @return string
-     */
-    protected static function replaceSpecials($string)
-    {
-        return str_replace(
-            ['đ', 'ß', 'ð', 'þ', 'ł', 's̱', '̱', '̤', '̩', 'æ', 'œ', 'ə', 'ı', 'ʿ', 'ʾ'],
-            ['d', 'ss', 'd', 'b', 'l', 's', '', '', '', 'ae', 'ce', 'e', 'i', '’', '’'],
-            $string
-        );
     }
 
     /**

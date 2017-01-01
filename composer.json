@@ -17,12 +17,17 @@
   ],
   "homepage": "https://github.com/jaroslavtyc/granam-string",
   "autoload": {
-    "psr-4": {"Granam\\": "Granam/"}
+    "psr-4": {
+      "Granam\\": "Granam/"
+    }
   },
   "require": {
     "php": ">=5.4",
     "granam/strict-object": "dev-master",
     "granam/scalar": "dev-master"
+  },
+  "suggest": {
+    "ext-intl": "*"
   },
   "require-dev": {
     "phpunit/phpunit": ">=4.4",
