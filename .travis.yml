@@ -13,7 +13,7 @@ matrix:
     - php: nightly
 
 before_script:
-  - if [[ $TRAVIS_PHP_VERSION =~ ^5[.][0-9]+$ ]]; then pecl install intl; fi
+  - if [[ $TRAVIS_PHP_VERSION =~ ^5[.][0-9]+$ ]]; then pecl channel-update pecl.php.net; yes | pecl install intl; fi
   - composer selfupdate
   - composer update --no-interaction --prefer-dist
   - composer require codeclimate/php-test-reporter:dev-master --dev
