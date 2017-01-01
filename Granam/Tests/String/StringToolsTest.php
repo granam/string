@@ -160,6 +160,10 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
                 'Parciais fy jac codi baw hud llawn dŵr ger tŷ Mabon.',
                 'Parciais fy jac codi baw hud llawn dwr ger ty Mabon.',
             ],
+            [/** @link http://getemoji.com/ */
+                '😀 😃 😄 😁 😆 😅 😂',
+                '😀 😃 😄 😁 😆 😅 😂',
+            ],
         ];
     }
 

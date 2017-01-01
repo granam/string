@@ -20,10 +20,33 @@ class StringTools extends StrictObject
         $originalLocale = setlocale(LC_CTYPE, 0);
         $withoutDiacritics = '';
         setlocale(LC_CTYPE, 'C.UTF-8');
+        $originalErrorReporting = ini_get('error_reporting');
+        ini_set('error_reporting', $originalErrorReporting | E_NOTICE);
         /** @noinspection ForeachSourceInspection */
         foreach ($matches['words'] as $index => $word) {
-            $withoutDiacritics .= iconv('UTF-8', 'ASCII//TRANSLIT', $word) . $matches['nonWords'][$index];
+            $wordWithoutDiacritics = @iconv('UTF-8', 'ASCII//TRANSLIT', $word);
+            $lastError = error_get_last();
+            if ($lastError && $lastError['file'] === __FILE__
+                && $lastError['message'] === 'iconv(): Detected an illegal character in input string'
+            ) {
+                $wordWithoutDiacritics = '';
+                preg_match_all('~\w~u', $word, $letters);
+                foreach ($letters[0] as $letter) {
+                    $convertedLetter = @iconv('UTF-8', 'ASCII//TRANSLIT', $letter);
+                    if ($convertedLetter === false) {
+                        // this error also overwrites previous with iconv(), which is important for previous condition
+                        trigger_error(
+                            "Could not convert character '{$letter}', using '🤣' instead",
+                            E_USER_WARNING // warning level, therefore original error reporting can control it
+                        );
+                        $convertedLetter = '🤣';
+                    }
+                    $wordWithoutDiacritics .= $convertedLetter;
+                }
+            }
+            $withoutDiacritics .= $wordWithoutDiacritics . $matches['nonWords'][$index];
         }
+        ini_set('error_reporting', $originalErrorReporting);
         setlocale(LC_CTYPE, $originalLocale);
 
         return $withoutDiacritics;
