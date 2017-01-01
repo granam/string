@@ -24,7 +24,7 @@ class StringTools extends StrictObject
         ini_set('error_reporting', $originalErrorReporting | E_NOTICE);
         /** @noinspection ForeachSourceInspection */
         foreach ($matches['words'] as $index => $word) {
-            if (class_exists(\Normalizer::class)) {
+            if (class_exists('Normalizer')) {
                 // maps special characters (characters with diacritics) on their base-character followed by the diacritical mark
                 // example:  Ú => U´,  á => a`
                 $withMovedMark = \Normalizer::normalize($word, \Normalizer::FORM_KD);
