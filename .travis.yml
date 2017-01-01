@@ -13,6 +13,7 @@ matrix:
     - php: nightly
 
 before_script:
+  - if [[ $TRAVIS_PHP_VERSION =~ ^5[.][0-9]+$ ]]; phpenv config-add int.ini; fi
   - composer selfupdate
   - composer update --no-interaction --prefer-dist
   - composer require codeclimate/php-test-reporter:dev-master --dev
