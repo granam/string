@@ -15,27 +15,19 @@ class StringTools extends StrictObject
     {
         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $value = ToString::toString($value);
-        $specialsReplaced = static::replaceSpecials($value);
-        preg_match_all('~(?<words>\w*)(?<nonWords>\W*)~u', $specialsReplaced, $matches);
-        $originalLocale = setlocale(LC_CTYPE, 0);
         $withoutDiacritics = '';
-        setlocale(LC_CTYPE, 'C.UTF-8');
-        $originalErrorReporting = ini_get('error_reporting');
-        ini_set('error_reporting', $originalErrorReporting | E_NOTICE);
-        /** @noinspection ForeachSourceInspection */
-        foreach ($matches['words'] as $index => $word) {
-            if (class_exists('Normalizer')) {
-                // maps special characters (characters with diacritics) on their base-character followed by the diacritical mark
-                // example:  Ú => U´,  á => a`
-                $withMovedMark = \Normalizer::normalize($word, \Normalizer::FORM_KD);
-                $wordWithoutDiacritics = preg_replace('~\pM~u', '', $withMovedMark); // removes diacritics (moved marks)
-            } else {
-                $wordWithoutDiacritics = static::removeDiacriticsFallback($word);
+        if (function_exists('transliterator_transliterate')) {
+            $specialsReplaced = static::replaceSpecials($value);
+            preg_match_all('~(?<words>\w*)(?<nonWords>\W*)~u', $specialsReplaced, $matches);
+            /** @noinspection ForeachSourceInspection */
+            foreach ($matches['words'] as $index => $word) {
+                $wordWithoutDiacritics = \transliterator_transliterate('Any-Latin; Latin-ASCII', $word);
+                $withoutDiacritics .= $wordWithoutDiacritics . $matches['nonWords'][$index];
             }
-            $withoutDiacritics .= $wordWithoutDiacritics . $matches['nonWords'][$index];
+        } else {
+            $specialsReplaced = static::replaceSpecials($value);
+            $withoutDiacritics = static::removeDiacriticsFallback($specialsReplaced);
         }
-        ini_set('error_reporting', $originalErrorReporting);
-        setlocale(LC_CTYPE, $originalLocale);
 
         return $withoutDiacritics;
     }
@@ -47,14 +39,8 @@ class StringTools extends StrictObject
     protected static function replaceSpecials($string)
     {
         return str_replace(
-            ['Ð', 'ð', 'Ŀ', 'ŀ', 'Ł', 'ł', 'S̱', 's̱', 'Đ', 'đ', 'ß', 'Ħ', 'ħ', '̱', '̤', '̩', 'Ä', 'ä', 'Æ', 'æ', 'Œ', 'œ',
-                'Þ', 'þ', 'Ŧ', 'ŧ', 'ĸ', 'Ə', 'ə', 'I', 'ı', 'Ö', 'ö', 'Ø', 'ø', 'Ñ', 'ñ', 'Ŋ', 'ŋ',
-                'Ÿ', 'ÿ', 'Ü', 'ü', 'Ĳ', 'ĳ', 'ʿ', 'ʾ',
-            ],
-            ['D', 'd', 'L', 'l', 'L', 'l', 'S', 's', 'D', 'd', 'ss', 'H', 'h', '', '', '', 'Ae', 'ae', 'Ae', 'ae', 'Oe', 'oe',
-                'T', 't', 'T', 't', 'k', 'E', 'e', 'I', 'i', 'Oe', 'oe', 'O', 'o', 'Ny', 'ny', 'N', 'n',
-                'Yu', 'yu', 'Ue', 'ue', 'IJ', 'ij', '’', '’',
-            ],
+            ['̱', '̤', '̩', 'Ə', 'ə', 'ʿ', 'ʾ', 'ʼ',],
+            ['', '', '', 'E', 'e', "'", "'", "'",],
             $string
         );
     }
@@ -65,6 +51,10 @@ class StringTools extends StrictObject
      */
     protected static function removeDiacriticsFallback($word)
     {
+        $originalErrorReporting = ini_get('error_reporting');
+        ini_set('error_reporting', $originalErrorReporting | E_NOTICE);
+        $originalLocale = setlocale(LC_CTYPE, 0);
+        setlocale(LC_CTYPE, 'C.UTF-8');
         $wordWithoutDiacritics = @iconv('UTF - 8', 'ASCII//TRANSLIT', $word); // cause a notice if a problem occurs
         $lastError = error_get_last();
         if ($lastError && $lastError['file'] === __FILE__
@@ -72,6 +62,7 @@ class StringTools extends StrictObject
         ) {
             $wordWithoutDiacritics = '';
             preg_match_all('~\w~u', $word, $letters);
+            /** @noinspection ForeachSourceInspection */
             foreach ($letters[0] as $letter) {
                 $convertedLetter = @iconv('UTF-8', 'ASCII//TRANSLIT', $letter); // cause a notice if a problem occurs
                 if ($convertedLetter === false) {
@@ -85,8 +76,29 @@ class StringTools extends StrictObject
                 $wordWithoutDiacritics .= $convertedLetter;
             }
         }
+        setlocale(LC_CTYPE, $originalLocale);
+        ini_set('error_reporting', $originalErrorReporting);
 
         return $wordWithoutDiacritics;
+    }
+
+    /**
+     * @param $string
+     * @return string
+     */
+    protected static function replaceSpecialsFallback($string)
+    {
+        return preg_replace(
+            ['Æ', 'æ', 'Œ', 'œ', 'Ð', 'ð', 'Ŀ', 'ŀ', 'Ł', 'ł', 'S̱', 's̱', 'Đ', 'đ', 'ß', 'Ħ', 'ħ', 'Ä', 'ä',
+                'Þ', 'þ', 'Ŧ', 'ŧ', 'ĸ', 'I', 'ı', 'Ö', 'ö', 'Ø', 'ø', 'Ñ', 'ñ', 'Ŋ', 'ŋ',
+                'Ÿ', 'ÿ', 'Ü', 'ü', 'Ĳ', 'ĳ',
+            ],
+            ['Ae', 'ae', 'Oe', 'oe', 'D', 'd', 'L', 'l', 'L', 'l', 'S', 's', 'D', 'd', 'ss', 'H', 'h', 'A', 'a',
+                'TH', 'th', 'T', 't', 'q', 'I', 'i', 'O', 'o', 'O', 'o', 'N', 'n', 'N', 'n',
+                'Yu', 'yu', 'U', 'u', 'IJ', 'ij',
+            ],
+            self::replaceSpecials(self::replaceSpecials($string))
+        );
     }
 
     /**
@@ -96,9 +108,7 @@ class StringTools extends StrictObject
     public static function toConstant($value)
     {
         $withoutDiacritics = self::removeDiacritics($value);
-        $trimmed = trim($withoutDiacritics);
-        $nonCharactersReplaced = preg_replace('~\W+~u', '_', $trimmed);
-        $underscored = preg_replace('~[^a-zA-Z0-9]+~', '_', $nonCharactersReplaced);
+        $underscored = preg_replace('~[^a-zA-Z0-9]+~', '_', trim($withoutDiacritics));
 
         return trim(strtolower($underscored), '_');
     }
