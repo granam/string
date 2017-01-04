@@ -65,7 +65,7 @@ class StringTools extends StrictObject
      */
     protected static function removeDiacriticsFallback($word)
     {
-        $wordWithoutDiacritics = @iconv('UTF - 8', 'ASCII//TRANSLIT', $word);
+        $wordWithoutDiacritics = @iconv('UTF - 8', 'ASCII//TRANSLIT', $word); // cause a notice if a problem occurs
         $lastError = error_get_last();
         if ($lastError && $lastError['file'] === __FILE__
             && $lastError['message'] === 'iconv(): Detected an illegal character in input string'
@@ -73,14 +73,14 @@ class StringTools extends StrictObject
             $wordWithoutDiacritics = '';
             preg_match_all('~\w~u', $word, $letters);
             foreach ($letters[0] as $letter) {
-                $convertedLetter = @iconv('UTF-8', 'ASCII//TRANSLIT', $letter);
+                $convertedLetter = @iconv('UTF-8', 'ASCII//TRANSLIT', $letter); // cause a notice if a problem occurs
                 if ($convertedLetter === false) {
                     // this error also overwrites previous with iconv(), which is important for previous condition
                     trigger_error(
-                        "Could not convert character '{$letter}', using '🤣' instead",
+                        "Could not convert character '{$letter}', using '?' instead",
                         E_USER_WARNING // warning level, therefore original error reporting can control it
                     );
-                    $convertedLetter = '🤣';
+                    $convertedLetter = '?';
                 }
                 $wordWithoutDiacritics .= $convertedLetter;
             }
