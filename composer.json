@@ -22,7 +22,7 @@
     }
   },
   "require": {
-    "php": ">=5.4",
+    "php": ">=5.5",
     "granam/strict-object": "dev-master",
     "granam/scalar": "dev-master"
   },
