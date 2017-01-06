@@ -13,7 +13,7 @@ class StringObjectTest extends \PHPUnit_Framework_TestCase
     public function I_can_use_it_as_scalar_object()
     {
         $stringObject = new StringObject('foo');
-        self::assertInstanceOf(Scalar::getClass(), $stringObject);
+        self::assertInstanceOf(Scalar::class, $stringObject);
     }
 
     /**
