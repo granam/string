@@ -160,13 +160,18 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
                 'Parciais fy jac codi baw hud llawn dŵr ger tŷ Mabon.',
                 'Parciais fy jac codi baw hud llawn dwr ger ty Mabon.',
             ],
-            [ /** @link http://ahinea.com/en/tech/accented-translate.html */
+            [/** @link http://ahinea.com/en/tech/accented-translate.html */
                 'ÐĐðđĦħ-ıĸĿŁŀł-ŊŉŋØøſ-ÞŦþŧ',
-                'DDddHh-iqLLll-N\'nnOos-THTtht'
+                'DDddHh-iqLLll-N\'nnOos-THTtht',
             ],
             [/** @link http://getemoji.com/ */
                 '😀 😃 😄 😁 😆 😅 😂',
                 '😀 😃 😄 😁 😆 😅 😂',
+            ],
+            /** @link https://en.wikipedia.org/wiki/Greek_alphabet */
+            [
+                'Α α άλφα, Β β βήτα, Γ γ γάμμα, Δ δ δέλτα, Ε ε έψιλον, Ζ ζ ζήτα, Η η ήτα, Θ θ θήτα, Ι ι ιώτα, Κ κ κάππα, Λ λ λάμδα, Μ μ μυ, Ν ν νυ, Ξ ξ ξι, Ο ο όμικρον, Π π πι, Ρ ρ ρώ, Σ σ/ς σίγμα, Τ τ ταυ, Υ υ ύψιλον, Φ φ φι, Χ χ χι, Ψ ψ ψι, Ω ω ωμέγα',
+                'A a alpha, B b beta, G g gamma, D d delta, E e epsilon, Z z zeta, E e eta, TH th theta, I i iota, K k kappa, L l lamda, M m my, N n ny, X x xi, O o omikron, P p pi, R r ro, S s/s sigma, T t tau, Y y ypsilon, PH ph phi, CH ch chi, PS ps psi, O o omega',
             ],
         ];
     }
@@ -192,11 +197,11 @@ class StringToolsTest extends \PHPUnit_Framework_TestCase
             ['Høj bly gom vandt fræk sexquiz på wc', 'hoj_bly_gom_vandt_fraek_sexquiz_pa_wc'], // Danish
             [ // Finnish
                 'Fahrenheit ja Celsius yrjösivät Åsan backgammon-peliin, Volkswagenissa, daiquirin ja ZX81:n yhteisvaikutuksesta',
-                'fahrenheit_ja_celsius_yrjosivat_asan_backgammon_peliin_volkswagenissa_daiquirin_ja_zx81_n_yhteisvaikutuksesta'
+                'fahrenheit_ja_celsius_yrjosivat_asan_backgammon_peliin_volkswagenissa_daiquirin_ja_zx81_n_yhteisvaikutuksesta',
             ],
             [ // French
                 'Voix ambiguë d\'un cœur qui au zéphyr préfère les jattes de kiwi',
-                'voix_ambigue_d_un_coeur_qui_au_zephyr_prefere_les_jattes_de_kiwi'
+                'voix_ambigue_d_un_coeur_qui_au_zephyr_prefere_les_jattes_de_kiwi',
             ],
         ];
     }
