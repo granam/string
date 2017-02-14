@@ -2,9 +2,8 @@
 namespace Granam\String;
 
 use Granam\Scalar\Tools\ToString;
-use Granam\Strict\Object\StrictObject;
 
-class StringTools extends StrictObject
+class StringTools
 {
 
     /**
