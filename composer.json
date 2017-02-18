@@ -23,8 +23,8 @@
   },
   "require": {
     "php": ">=7.0",
-    "granam/strict-object": "dev-master",
-    "granam/scalar": "dev-master"
+    "granam/scalar": "^3.0",
+    "granam/strict-object": "^3.0"
   },
   "suggest": {
     "ext-intl": "*"
