@@ -2,8 +2,9 @@
 namespace Granam\Tests\String;
 
 use Granam\String\StringTools;
+use PHPUnit\Framework\TestCase;
 
-class StringToolsTest extends \PHPUnit_Framework_TestCase
+class StringToolsTest extends TestCase
 {
     /**
      * @test

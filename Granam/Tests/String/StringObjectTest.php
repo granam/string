@@ -3,8 +3,9 @@ namespace Granam\Tests\String;
 
 use Granam\Scalar\Scalar;
 use Granam\String\StringObject;
+use PHPUnit\Framework\TestCase;
 
-class StringObjectTest extends \PHPUnit_Framework_TestCase
+class StringObjectTest extends TestCase
 {
 
     /**
