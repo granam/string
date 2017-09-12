@@ -2,8 +2,9 @@
 namespace Granam\String;
 
 use Granam\Scalar\Tools\ToString;
+use Granam\Strict\Object\StrictObject;
 
-class StringTools
+class StringTools extends StrictObject
 {
 
     /**
@@ -109,7 +110,7 @@ class StringTools
         $withoutDiacritics = self::removeDiacritics($value);
         $underscored = preg_replace('~[^a-zA-Z0-9]+~', '_', trim($withoutDiacritics));
 
-        return trim(strtolower($underscored), '_');
+        return strtolower(trim($underscored, '_'));
     }
 
     /**
@@ -136,6 +137,16 @@ class StringTools
      * @return string
      */
     public static function assembleGetterForName($valueName, $prefix = 'get')
+    {
+        return self::assembleMethodName($valueName, $prefix);
+    }
+
+    /**
+     * @param string|StringInterface $valueName
+     * @param string|StringInterface $prefix
+     * @return string
+     */
+    public static function assembleIsForName($valueName, $prefix = 'is')
     {
         return self::assembleMethodName($valueName, $prefix);
     }

@@ -207,7 +207,7 @@ class StringToolsTest extends TestCase
             [
                 'Bojovník a čaroděj – archetypy',
                 'bojovnik_a_carodej_archetypy',
-            ]
+            ],
         ];
     }
 
@@ -279,6 +279,31 @@ class StringToolsTest extends TestCase
         return [
             [__CLASS__, 'setStringToolsTest'],
             ["\n\t Dřípatka\\horská ?", 'setHorska'],
+            ['small-ukulele', 'reserveSmallUkulele', 'reserve'],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider provideValueNameAndIsMethod
+     * @param string $valueName
+     * @param string $expectedSetter
+     * @param string|null $prefix
+     */
+    public function I_can_get_is_method_for_any_name($valueName, $expectedSetter, $prefix = null)
+    {
+        if ($prefix === null) {
+            self::assertSame($expectedSetter, StringTools::assembleIsForName($valueName));
+        } else {
+            self::assertSame($expectedSetter, StringTools::assembleIsForName($valueName, $prefix));
+        }
+    }
+
+    public function provideValueNameAndIsMethod()
+    {
+        return [
+            [__CLASS__, 'isStringToolsTest'],
+            ["\n\t Dřípatka\\horská ?", 'isHorska'],
             ['small-ukulele', 'reserveSmallUkulele', 'reserve'],
         ];
     }
