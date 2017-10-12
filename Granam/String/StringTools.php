@@ -10,10 +10,10 @@ class StringTools extends StrictObject
     /**
      * @param string|StringInterface $value
      * @return string $withoutDiacritics
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
      */
-    public static function removeDiacritics($value)
+    public static function removeDiacritics($value): string
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $value = ToString::toString($value);
         $withoutDiacritics = '';
         if (function_exists('transliterator_transliterate')) {
@@ -36,7 +36,7 @@ class StringTools extends StrictObject
      * @param $string
      * @return string
      */
-    protected static function replaceSpecials($string)
+    protected static function replaceSpecials($string): string
     {
         return str_replace(
             ['̱', '̤', '̩', 'Ə', 'ə', 'ʿ', 'ʾ', 'ʼ',],
@@ -49,7 +49,7 @@ class StringTools extends StrictObject
      * @param string $word
      * @return string
      */
-    protected static function removeDiacriticsFallback($word)
+    protected static function removeDiacriticsFallback(string $word): string
     {
         $originalErrorReporting = ini_get('error_reporting');
         ini_set('error_reporting', $originalErrorReporting | E_NOTICE);
@@ -86,7 +86,7 @@ class StringTools extends StrictObject
      * @param $string
      * @return string
      */
-    protected static function replaceSpecialsFallback($string)
+    protected static function replaceSpecialsFallback($string): string
     {
         return preg_replace(
             ['Æ', 'æ', 'Œ', 'œ', 'Ð', 'ð', 'Ŀ', 'ŀ', 'Ł', 'ł', 'S̱', 's̱', 'Đ', 'đ', 'ß', 'Ħ', 'ħ', 'Ä', 'ä',
@@ -104,8 +104,9 @@ class StringTools extends StrictObject
     /**
      * @param string|StringInterface $value
      * @return string
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
      */
-    public static function toConstant($value)
+    public static function toConstant($value): string
     {
         $withoutDiacritics = self::removeDiacritics($value);
         $underscored = preg_replace('~[^a-zA-Z0-9]+~', '_', trim($withoutDiacritics));
@@ -116,10 +117,10 @@ class StringTools extends StrictObject
     /**
      * @param string|StringInterface $className
      * @return string
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
      */
-    public static function camelCaseToSnakeCasedBasename($className)
+    public static function camelCaseToSnakeCasedBasename($className): string
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $className = ToString::toString($className);
         $baseName = $className;
         if (preg_match('~(?<basename>[^\\\]+)$~u', $className, $matches) > 0) {
@@ -135,8 +136,9 @@ class StringTools extends StrictObject
      * @param string|StringInterface $valueName
      * @param string|StringInterface $prefix
      * @return string
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
      */
-    public static function assembleGetterForName($valueName, $prefix = 'get')
+    public static function assembleGetterForName($valueName, $prefix = 'get'): string
     {
         return self::assembleMethodName($valueName, $prefix);
     }
@@ -145,8 +147,9 @@ class StringTools extends StrictObject
      * @param string|StringInterface $valueName
      * @param string|StringInterface $prefix
      * @return string
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
      */
-    public static function assembleIsForName($valueName, $prefix = 'is')
+    public static function assembleIsForName($valueName, $prefix = 'is'): string
     {
         return self::assembleMethodName($valueName, $prefix);
     }
@@ -155,8 +158,9 @@ class StringTools extends StrictObject
      * @param string|StringInterface $valueName
      * @param string|StringInterface $prefix
      * @return string
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
      */
-    public static function assembleSetterForName($valueName, $prefix = 'set')
+    public static function assembleSetterForName($valueName, $prefix = 'set'): string
     {
         return self::assembleMethodName($valueName, $prefix);
     }
@@ -165,8 +169,9 @@ class StringTools extends StrictObject
      * @param string|StringInterface $fromValue
      * @param string|StringInterface $prefix
      * @return string
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
      */
-    public static function assembleMethodName($fromValue, $prefix = '')
+    public static function assembleMethodName($fromValue, $prefix = ''): string
     {
         $methodName = implode(
             array_map(
@@ -176,7 +181,6 @@ class StringTools extends StrictObject
                 explode('_', self::toConstant(self::camelCaseToSnakeCasedBasename($fromValue)))
             )
         );
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $prefix = ToString::toString($prefix);
         if ($prefix === '') {
             return lcfirst($methodName);
@@ -198,15 +202,59 @@ class StringTools extends StrictObject
      *
      * @param string|StringInterface $string an UTF-8 encoded string
      * @return string
+     * @throws \Granam\String\Exceptions\CanNotRemoveBom
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
      */
-    public static function stripUtf8Bom($string)
+    public static function stripUtf8Bom($string): string
     {
-        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
         $string = ToString::toString($string);
-        if (\substr_compare($string, "\xEF\xBB\xBF", 0, 3) === 0) {
-            $string = \substr($string, 3);
+        if (\substr_compare($string, "\xEF\xBB\xBF", 0, 3) !== 0) {
+            return $string;
+        }
+        $withoutBom = \substr($string, 3);
+        if ($withoutBom === false) {
+            throw new Exceptions\CanNotRemoveBom('Can not remove BOM from given string ' . $string);
         }
 
-        return $string;
+        return $withoutBom;
+    }
+
+    public static function toUtf8(string $string, string $sourceEncoding)
+    {
+        /** @link https://stackoverflow.com/questions/8233517/what-is-the-difference-between-iconv-and-mb-convert-encoding-in-php# */
+        if (function_exists('mb_convert_encoding')) {
+            return mb_convert_encoding($string, $sourceEncoding, 'UTF-8'); // works same regardless of platform
+        }
+
+        // iconv is just a wrapper of C iconv function, therefore it is platform-related
+        return iconv(self::getIconvEncodingForPlatform($sourceEncoding), 'UTF-8', $string);
+    }
+
+    public static function getIconvEncodingForPlatform(string $isoEncoding)
+    {
+        if (strtoupper(strpos($isoEncoding, 3)) !== 'ISO' || strtoupper(substr(PHP_OS, 3)) !== 'WIN' /* windows */) {
+            return $isoEncoding;
+        }
+        /** http://php.net/manual/en/function.iconv.php#71192 */
+        switch ($isoEncoding) {
+            case 'ISO-8859-2' :
+                return 'CP1250'; // Eastern European
+            case 'ISO-8859-5':
+                return 'CP1251'; // Cyrillic
+            case 'ISO-8859-1':
+                return 'CP1252'; // Western European
+            case 'ISO-8859-7':
+                return 'CP1253'; // Greek
+            case 'ISO-8859-9':
+                return 'CP1254'; // Turkish
+            case 'ISO-8859-8':
+                return 'CP1255'; // Hebrew
+            case 'ISO-8859-6':
+                return 'CP1256'; // Arabic
+            case 'ISO-8859-4':
+                return 'CP1257'; // Baltic
+            default :
+                return $isoEncoding;
+        }
     }
 }
