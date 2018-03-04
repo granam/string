@@ -17,7 +17,7 @@ class StringToolsTest extends TestCase
         self::assertSame($expectedResult, StringTools::removeDiacritics($value));
     }
 
-    public function provideValuesToRemoveDiacritics()
+    public function provideValuesToRemoveDiacritics(): array
     {
         /** For list of all pangrams see great @link http://clagnut.com/blog/2380/ */
         return [
@@ -290,7 +290,7 @@ class StringToolsTest extends TestCase
      * @param string $expectedSetter
      * @param string|null $prefix
      */
-    public function I_can_get_is_method_for_any_name($valueName, $expectedSetter, $prefix = null)
+    public function I_can_get_is_method_for_any_name(string $valueName, string $expectedSetter, string $prefix = null)
     {
         if ($prefix === null) {
             self::assertSame($expectedSetter, StringTools::assembleIsForName($valueName));
@@ -299,7 +299,7 @@ class StringToolsTest extends TestCase
         }
     }
 
-    public function provideValueNameAndIsMethod()
+    public function provideValueNameAndIsMethod(): array
     {
         return [
             [__CLASS__, 'isStringToolsTest'],
@@ -331,5 +331,13 @@ class StringToolsTest extends TestCase
             $utf8String,
             StringTools::stripUtf8Bom($utf8String)
         );
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_git_status_text_encoded_in_octal_as_utf_8()
+    {
+        self::assertSame('O životě', StringTools::octalToUtf8('O \305\276ivot\304\233'));
     }
 }

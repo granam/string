@@ -16,9 +16,9 @@ class StringTools extends StrictObject
     {
         $value = ToString::toString($value);
         $withoutDiacritics = '';
-        if (function_exists('transliterator_transliterate')) {
+        if (\function_exists('transliterator_transliterate')) {
             $specialsReplaced = static::replaceSpecials($value);
-            preg_match_all('~(?<words>\w*)(?<nonWords>\W*)~u', $specialsReplaced, $matches);
+            \preg_match_all('~(?<words>\w*)(?<nonWords>\W*)~u', $specialsReplaced, $matches);
             /** @noinspection ForeachSourceInspection */
             foreach ($matches['words'] as $index => $word) {
                 $wordWithoutDiacritics = \transliterator_transliterate('Any-Latin; Latin-ASCII', $word);
@@ -38,7 +38,7 @@ class StringTools extends StrictObject
      */
     protected static function replaceSpecials($string): string
     {
-        return str_replace(
+        return \str_replace(
             ['̱', '̤', '̩', 'Ə', 'ə', 'ʿ', 'ʾ', 'ʼ',],
             ['', '', '', 'E', 'e', "'", "'", "'",],
             $string
@@ -51,23 +51,23 @@ class StringTools extends StrictObject
      */
     protected static function removeDiacriticsFallback(string $word): string
     {
-        $originalErrorReporting = ini_get('error_reporting');
-        ini_set('error_reporting', $originalErrorReporting | E_NOTICE);
-        $originalLocale = setlocale(LC_CTYPE, 0);
-        setlocale(LC_CTYPE, 'C.UTF-8');
-        $wordWithoutDiacritics = @iconv('UTF - 8', 'ASCII//TRANSLIT', $word); // cause a notice if a problem occurs
-        $lastError = error_get_last();
+        $originalErrorReporting = \ini_get('error_reporting');
+        \ini_set('error_reporting', $originalErrorReporting | E_NOTICE);
+        $originalLocale = \setlocale(LC_CTYPE, 0);
+        \setlocale(LC_CTYPE, 'C.UTF-8');
+        $wordWithoutDiacritics = @\iconv('UTF - 8', 'ASCII//TRANSLIT', $word); // cause a notice if a problem occurs
+        $lastError = \error_get_last();
         if ($lastError && $lastError['file'] === __FILE__
             && $lastError['message'] === 'iconv(): Detected an illegal character in input string'
         ) {
             $wordWithoutDiacritics = '';
-            preg_match_all('~\w~u', $word, $letters);
+            \preg_match_all('~\w~u', $word, $letters);
             /** @noinspection ForeachSourceInspection */
             foreach ($letters[0] as $letter) {
                 $convertedLetter = @iconv('UTF-8', 'ASCII//TRANSLIT', $letter); // cause a notice if a problem occurs
                 if ($convertedLetter === false) {
                     // this error also overwrites previous with iconv(), which is important for previous condition
-                    trigger_error(
+                    \trigger_error(
                         "Could not convert character '{$letter}', using '?' instead",
                         E_USER_WARNING // warning level, therefore original error reporting can control it
                     );
@@ -76,8 +76,8 @@ class StringTools extends StrictObject
                 $wordWithoutDiacritics .= $convertedLetter;
             }
         }
-        setlocale(LC_CTYPE, $originalLocale);
-        ini_set('error_reporting', $originalErrorReporting);
+        \setlocale(LC_CTYPE, $originalLocale);
+        \ini_set('error_reporting', $originalErrorReporting);
 
         return $wordWithoutDiacritics;
     }
@@ -88,7 +88,7 @@ class StringTools extends StrictObject
      */
     protected static function replaceSpecialsFallback($string): string
     {
-        return preg_replace(
+        return \preg_replace(
             ['Æ', 'æ', 'Œ', 'œ', 'Ð', 'ð', 'Ŀ', 'ŀ', 'Ł', 'ł', 'S̱', 's̱', 'Đ', 'đ', 'ß', 'Ħ', 'ħ', 'Ä', 'ä',
                 'Þ', 'þ', 'Ŧ', 'ŧ', 'ĸ', 'I', 'ı', 'Ö', 'ö', 'Ø', 'ø', 'Ñ', 'ñ', 'Ŋ', 'ŋ',
                 'Ÿ', 'ÿ', 'Ü', 'ü', 'Ĳ', 'ĳ',
@@ -109,9 +109,9 @@ class StringTools extends StrictObject
     public static function toConstant($value): string
     {
         $withoutDiacritics = self::removeDiacritics($value);
-        $underscored = preg_replace('~[^a-zA-Z0-9]+~', '_', trim($withoutDiacritics));
+        $underscored = \preg_replace('~[^a-zA-Z0-9]+~', '_', \trim($withoutDiacritics));
 
-        return strtolower(trim($underscored, '_'));
+        return \strtolower(\trim($underscored, '_'));
     }
 
     /**
@@ -123,13 +123,13 @@ class StringTools extends StrictObject
     {
         $className = ToString::toString($className);
         $baseName = $className;
-        if (preg_match('~(?<basename>[^\\\]+)$~u', $className, $matches) > 0) {
+        if (\preg_match('~(?<basename>[^\\\]+)$~u', $className, $matches) > 0) {
             $baseName = $matches['basename'];
         }
-        $parts = preg_split('~([A-Z][a-z_]*)~', $baseName, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        $underscored = preg_replace('~_{2,}~', '_', implode('_', $parts));
+        $parts = \preg_split('~([A-Z][a-z_]*)~', $baseName, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $underscored = \preg_replace('~_{2,}~', '_', \implode('_', $parts));
 
-        return strtolower($underscored);
+        return \strtolower($underscored);
     }
 
     /**
@@ -173,17 +173,17 @@ class StringTools extends StrictObject
      */
     public static function assembleMethodName($fromValue, $prefix = ''): string
     {
-        $methodName = implode(
-            array_map(
+        $methodName = \implode(
+            \array_map(
                 function ($namePart) {
-                    return ucfirst($namePart);
+                    return \ucfirst($namePart);
                 },
-                explode('_', self::toConstant(self::camelCaseToSnakeCasedBasename($fromValue)))
+                \explode('_', self::toConstant(self::camelCaseToSnakeCasedBasename($fromValue)))
             )
         );
         $prefix = ToString::toString($prefix);
         if ($prefix === '') {
-            return lcfirst($methodName);
+            return \lcfirst($methodName);
         }
 
         return $prefix . $methodName;
@@ -222,17 +222,17 @@ class StringTools extends StrictObject
     public static function toUtf8(string $string, string $sourceEncoding)
     {
         /** @link https://stackoverflow.com/questions/8233517/what-is-the-difference-between-iconv-and-mb-convert-encoding-in-php# */
-        if (function_exists('mb_convert_encoding')) {
-            return mb_convert_encoding($string, $sourceEncoding, 'UTF-8'); // works same regardless of platform
+        if (\function_exists('mb_convert_encoding')) {
+            return \mb_convert_encoding($string, $sourceEncoding, 'UTF-8'); // works same regardless of platform
         }
 
         // iconv is just a wrapper of C iconv function, therefore it is platform-related
-        return iconv(self::getIconvEncodingForPlatform($sourceEncoding), 'UTF-8', $string);
+        return \iconv(self::getIconvEncodingForPlatform($sourceEncoding), 'UTF-8', $string);
     }
 
     public static function getIconvEncodingForPlatform(string $isoEncoding)
     {
-        if (strtoupper(strpos($isoEncoding, 3)) !== 'ISO' || strtoupper(substr(PHP_OS, 3)) !== 'WIN' /* windows */) {
+        if (\strtoupper(\strpos($isoEncoding, 3)) !== 'ISO' || \strtoupper(\substr(PHP_OS, 3)) !== 'WIN' /* windows */) {
             return $isoEncoding;
         }
         /** http://php.net/manual/en/function.iconv.php#71192 */
@@ -256,5 +256,28 @@ class StringTools extends StrictObject
             default :
                 return $isoEncoding;
         }
+    }
+
+    /**
+     * Useful to convert GIT status output for example: 'O \305\276ivot\304\233.html' => 'O životě.html'
+     * see @link https://stackoverflow.com/questions/22827239/how-to-make-git-properly-display-utf-8-encoded-pathnames-in-the-console-window
+     * and @link https://stackoverflow.com/questions/34934653/iso-8859-1-octal-back-to-normal-characters
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function octalToUtf8(string $string): string
+    {
+        /** @var array|string[][] $matches */
+        if (!\preg_match_all('~(?<octal>[\\\]\d{3})~', $string, $matches)) {
+            return $string;
+        }
+        foreach ($matches['octal'] as $octal) {
+            $octalChar = \ltrim($octal, '\\');
+            $packed = \pack('H*', \base_convert($octalChar, 8, 16)); // UTF-8 is de facto base 16
+            $string = \str_replace('\\' . $octalChar, $packed, $string);
+        }
+
+        return $string;
     }
 }
