@@ -25,7 +25,7 @@ class StringTools extends StrictObject
                 $withoutDiacritics .= $wordWithoutDiacritics . $matches['nonWords'][$index];
             }
         } else {
-            $specialsReplaced = static::replaceSpecials($value);
+            $specialsReplaced = static::replaceSpecialsFallback($value);
             $withoutDiacritics = static::removeDiacriticsFallback($specialsReplaced);
         }
 
@@ -61,19 +61,23 @@ class StringTools extends StrictObject
             && $lastError['message'] === 'iconv(): Detected an illegal character in input string'
         ) {
             $wordWithoutDiacritics = '';
-            \preg_match_all('~\w~u', $word, $letters);
+            \preg_match_all('~.~u', $word, $characters);
             /** @noinspection ForeachSourceInspection */
-            foreach ($letters[0] as $letter) {
-                $convertedLetter = @iconv('UTF-8', 'ASCII//TRANSLIT', $letter); // cause a notice if a problem occurs
-                if ($convertedLetter === false) {
-                    // this error also overwrites previous with iconv(), which is important for previous condition
-                    \trigger_error(
-                        "Could not convert character '{$letter}', using '?' instead",
-                        E_USER_WARNING // warning level, therefore original error reporting can control it
-                    );
-                    $convertedLetter = '?';
+            foreach ($characters[0] as $character) {
+                if (!\preg_match('~\w~u', $character)) {
+                    $wordWithoutDiacritics .= $character;
+                } else {
+                    $convertedLetter = @iconv('UTF-8', 'ASCII//TRANSLIT', $character); // cause a notice if a problem occurs
+                    if ($convertedLetter === false) {
+                        // this error also overwrites previous with iconv(), which is important for previous condition
+                        \trigger_error(
+                            "Could not convert character '{$character}', using '?' instead",
+                            E_USER_WARNING // warning level, therefore original error reporting can control it
+                        );
+                        $convertedLetter = '?';
+                    }
+                    $wordWithoutDiacritics .= $convertedLetter;
                 }
-                $wordWithoutDiacritics .= $convertedLetter;
             }
         }
         \setlocale(LC_CTYPE, $originalLocale);
@@ -86,16 +90,24 @@ class StringTools extends StrictObject
      * @param $string
      * @return string
      */
-    protected static function replaceSpecialsFallback($string): string
+    protected static function replaceSpecialsFallback(string $string): string
     {
-        return \preg_replace(
-            ['Æ', 'æ', 'Œ', 'œ', 'Ð', 'ð', 'Ŀ', 'ŀ', 'Ł', 'ł', 'S̱', 's̱', 'Đ', 'đ', 'ß', 'Ħ', 'ħ', 'Ä', 'ä',
+        return \str_replace(
+            [
+                'Æ', 'æ', 'Œ', 'œ', 'Ð', 'ð', 'Ŀ', 'ŀ', 'Ł', 'ł', 'S̱', 's̱', 'Đ', 'đ', 'ß', 'Ħ', 'ħ', 'Ä', 'ä',
                 'Þ', 'þ', 'Ŧ', 'ŧ', 'ĸ', 'I', 'ı', 'Ö', 'ö', 'Ø', 'ø', 'Ñ', 'ñ', 'Ŋ', 'ŋ',
-                'Ÿ', 'ÿ', 'Ü', 'ü', 'Ĳ', 'ĳ',
+                'Ÿ', 'ÿ', 'Ü', 'ü', 'Ĳ', 'ĳ', 'ŉ', 'ſ',
+                // greece
+                'αυ', 'Α', 'α', 'ά', 'λ', 'φ', 'Β', 'β', 'ή', 'τ', 'Γ', 'γ', 'μ', 'Δ', 'δ', 'έ', 'Ε', 'ε', 'ψ', 'ι', 'ο', 'ν', 'Ζ', 'ζ', 'Η', 'η',
+                'Θ', 'θ', 'Ι', 'ώ', 'Κ', 'κ', 'π', 'Λ', 'Μ', 'υ', 'Ν', 'Ξ', 'ξ', 'Ο', 'ό', 'ρ', 'Π', 'Ρ', 'Σ', 'σ', 'ς', 'ί', 'Τ', 'Υ', 'ύ', 'Φ', 'Χ', 'χ', 'Ψ', 'Ω', 'ω',
             ],
-            ['Ae', 'ae', 'Oe', 'oe', 'D', 'd', 'L', 'l', 'L', 'l', 'S', 's', 'D', 'd', 'ss', 'H', 'h', 'A', 'a',
+            [
+                'Ae', 'ae', 'Oe', 'oe', 'D', 'd', 'L', 'l', 'L', 'l', 'S', 's', 'D', 'd', 'ss', 'H', 'h', 'A', 'a',
                 'TH', 'th', 'T', 't', 'q', 'I', 'i', 'O', 'o', 'O', 'o', 'N', 'n', 'N', 'n',
-                'Yu', 'yu', 'U', 'u', 'IJ', 'ij',
+                'Yu', 'yu', 'U', 'u', 'IJ', 'ij', "'n", 's',
+                // greece
+                'au', 'A', 'a', 'a', 'l', 'ph', 'B', 'b', 'e', 't', 'G', 'g', 'm', 'D', 'd', 'e', 'E', 'e', 'ps', 'i', 'o', 'n', 'Z', 'z', 'E', 'e',
+                'TH', 'th', 'I', 'o', 'K', 'k', 'p', 'L', 'M', 'y', 'N', 'X', 'x', 'O', 'o', 'r', 'P', 'R', 'S', 's', 's', 'i', 'T', 'Y', 'y', 'PH', 'CH', 'ch', 'PS', 'O', 'o'
             ],
             self::replaceSpecials(self::replaceSpecials($string))
         );
@@ -219,7 +231,7 @@ class StringTools extends StrictObject
         return $withoutBom;
     }
 
-    public static function toUtf8(string $string, string $sourceEncoding)
+    public static function toUtf8(string $string, string $sourceEncoding): string
     {
         /** @link https://stackoverflow.com/questions/8233517/what-is-the-difference-between-iconv-and-mb-convert-encoding-in-php# */
         if (\function_exists('mb_convert_encoding')) {

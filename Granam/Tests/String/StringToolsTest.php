@@ -21,6 +21,10 @@ class StringToolsTest extends TestCase
     {
         /** For list of all pangrams see great @link http://clagnut.com/blog/2380/ */
         return [
+            [ // Portuguese
+                'Luís argüia à Júlia que «brações, fé, chá, óxido, pôr, zângão» eram palavras do português.',
+                'Luis arguia a Julia que «bracoes, fe, cha, oxido, por, zangao» eram palavras do portugues.',
+            ],
             [ // Arabic
                 'naṣun ḥakymun lahu syrun qāṭiʿun wa ḏu šānin ʿẓymin maktubun ʿala ṯubin aẖḍra wa muġalafun biǧildin azraq',
                 'nasun hakymun lahu syrun qati\'un wa du sanin \'zymin maktubun \'ala tubin ahdra wa mugalafun bigildin azraq',
@@ -109,10 +113,7 @@ class StringToolsTest extends TestCase
                 'Jeżu klątw, spłódź Finom część gry hańb!',
                 'Jezu klatw, splodz Finom czesc gry hanb!',
             ],
-            [ // Portuguese
-                'Luís argüia à Júlia que «brações, fé, chá, óxido, pôr, zângão» eram palavras do português.',
-                'Luis arguia a Julia que «bracoes, fe, cha, oxido, por, zangao» eram palavras do portugues.',
-            ],
+
             [ // Romanian
                 'Muzicologă în bej vând whisky și tequila, preț fix.',
                 'Muzicologa in bej vand whisky si tequila, pret fix.',
@@ -170,10 +171,12 @@ class StringToolsTest extends TestCase
                 '😀 😃 😄 😁 😆 😅 😂',
             ],
             /** @link https://en.wikipedia.org/wiki/Greek_alphabet */
-            [
-                'Α α άλφα, Β β βήτα, Γ γ γάμμα, Δ δ δέλτα, Ε ε έψιλον, Ζ ζ ζήτα, Η η ήτα, Θ θ θήτα, Ι ι ιώτα, Κ κ κάππα, Λ λ λάμδα, Μ μ μυ, Ν ν νυ, Ξ ξ ξι, Ο ο όμικρον, Π π πι, Ρ ρ ρώ, Σ σ/ς σίγμα, Τ τ ταυ, Υ υ ύψιλον, Φ φ φι, Χ χ χι, Ψ ψ ψι, Ω ω ωμέγα',
-                'A a alpha, B b beta, G g gamma, D d delta, E e epsilon, Z z zeta, E e eta, TH th theta, I i iota, K k kappa, L l lamda, M m my, N n ny, X x xi, O o omikron, P p pi, R r ro, S s/s sigma, T t tau, Y y ypsilon, PH ph phi, CH ch chi, PS ps psi, O o omega',
-            ],
+            ['Α α άλφα', 'A a alpha'], ['Β β βήτα', 'B b beta'], ['Γ γ γάμμα', 'G g gamma'], ['Δ δ δέλτα', 'D d delta'],
+            ['Ε ε έψιλον', 'E e epsilon'], ['Ζ ζ ζήτα', 'Z z zeta'], ['Η η ήτα', 'E e eta'], ['Θ θ θήτα', 'TH th theta'],
+            ['Ι ι ιώτα', 'I i iota'], ['Κ κ κάππα', 'K k kappa'], ['Λ λ λάμδα', 'L l lamda'], ['Μ μ μυ', 'M m my'],
+            ['Ν ν νυ', 'N n ny'], ['Ξ ξ ξι', 'X x xi'], ['Ο ο όμικρον', 'O o omikron'], ['Π π πι', 'P p pi'],
+            ['Ρ ρ ρώ', 'R r ro'], ['Σ σ/ς σίγμα', 'S s/s sigma'], ['Τ τ ταυ', 'T t tau'], ['Υ υ ύψιλον', 'Y y ypsilon'],
+            ['Φ φ φι', 'PH ph phi'], ['Χ χ χι', 'CH ch chi'], ['Ψ ψ ψι', 'PS ps psi'], ['Ω ω ωμέγα', 'O o omega']
         ];
     }
 
@@ -183,12 +186,12 @@ class StringToolsTest extends TestCase
      * @param string $toConstant
      * @param string $asConstant
      */
-    public function I_can_convert_any_string_to_constant_like_value($toConstant, $asConstant)
+    public function I_can_convert_any_string_to_constant_like_value(string $toConstant, string $asConstant)
     {
         self::assertSame($asConstant, StringTools::toConstant($toConstant));
     }
 
-    public function provideValuesToMakeConstant()
+    public function provideValuesToMakeConstant(): array
     {
         /** For list of all pangrams see great @link http://clagnut.com/blog/2380/ */
         return [
@@ -204,10 +207,7 @@ class StringToolsTest extends TestCase
                 'Voix ambiguë d\'un cœur qui au zéphyr préfère les jattes de kiwi',
                 'voix_ambigue_d_un_coeur_qui_au_zephyr_prefere_les_jattes_de_kiwi',
             ],
-            [
-                'Bojovník a čaroděj – archetypy',
-                'bojovnik_a_carodej_archetypy',
-            ],
+            ['Bojovník a čaroděj – archetypy', 'bojovnik_a_carodej_archetypy'] // Czech with long dash (was problematic in some situations)
         ];
     }
 
@@ -222,7 +222,7 @@ class StringToolsTest extends TestCase
         self::assertSame($expectedResult, StringTools::camelCaseToSnakeCasedBasename($toConvert));
     }
 
-    public function provideValueToSnakeCase()
+    public function provideValueToSnakeCase(): array
     {
         return [
             [__CLASS__, 'string_tools_test'],
@@ -249,7 +249,7 @@ class StringToolsTest extends TestCase
         }
     }
 
-    public function provideValueNameAndGetter()
+    public function provideValueNameAndGetter(): array
     {
         return [
             [__CLASS__, 'getStringToolsTest'],
@@ -274,7 +274,7 @@ class StringToolsTest extends TestCase
         }
     }
 
-    public function provideValueNameAndSetter()
+    public function provideValueNameAndSetter(): array
     {
         return [
             [__CLASS__, 'setStringToolsTest'],
