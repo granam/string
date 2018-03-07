@@ -1,6 +1,7 @@
 language: php
 php:
   - nightly
+  - 7.2
   - 7.1
   - 7.0
 matrix:
@@ -14,7 +15,8 @@ before_script:
   - composer require codeclimate/php-test-reporter:dev-master --dev
 
 script:
-  - ./vendor/phpunit/phpunit/phpunit -v --coverage-clover build/logs/clover.xml
+  - sudo phpdismod intl && ./vendor/phpunit/phpunit/phpunit
+  - sudo phpenmod intl && ./vendor/phpunit/phpunit/phpunit -v --coverage-clover build/logs/clover.xml
 
 after_script:
   - CODECLIMATE_REPO_TOKEN=a95cd56eb76cc8e700a56d5f0b306ef7fc617873cfbf5ff07cda7f7e03437ec5 ./vendor/bin/test-reporter
