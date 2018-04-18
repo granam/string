@@ -127,6 +127,20 @@ class StringTools extends StrictObject
     }
 
     /**
+     * @param string|StringInterface $value
+     * @return string
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
+     */
+    public static function camelCaseToSnakeCase($value): string
+    {
+        $value = ToString::toString($value);
+        $parts = \preg_split('~([A-Z][a-z_]*)~', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $underscored = \preg_replace('~_{2,}~', '_', \implode('_', $parts));
+
+        return \strtolower($underscored);
+    }
+
+    /**
      * @param string|StringInterface $className
      * @return string
      * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
@@ -138,10 +152,8 @@ class StringTools extends StrictObject
         if (\preg_match('~(?<basename>[^\\\]+)$~u', $className, $matches) > 0) {
             $baseName = $matches['basename'];
         }
-        $parts = \preg_split('~([A-Z][a-z_]*)~', $baseName, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        $underscored = \preg_replace('~_{2,}~', '_', \implode('_', $parts));
 
-        return \strtolower($underscored);
+        return static::camelCaseToSnakeCase($baseName);
     }
 
     /**
