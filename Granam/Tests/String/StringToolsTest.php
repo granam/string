@@ -1,6 +1,8 @@
 <?php
 namespace Granam\Tests\String;
 
+use Granam\String\StringInterface;
+use Granam\String\StringObject;
 use Granam\String\StringTools;
 use PHPUnit\Framework\TestCase;
 
@@ -217,7 +219,7 @@ class StringToolsTest extends TestCase
      * @param string $toConvert
      * @param string $expectedResult
      */
-    public function I_can_turn_to_snake_case_anything($toConvert, $expectedResult)
+    public function I_can_turn_to_snake_case_anything($toConvert, string $expectedResult)
     {
         self::assertSame($expectedResult, StringTools::camelCaseToSnakeCasedBasename($toConvert));
     }
@@ -225,12 +227,30 @@ class StringToolsTest extends TestCase
     public function provideValueToSnakeCase(): array
     {
         return [
-            [__CLASS__, 'string_tools_test'],
             [__FUNCTION__, 'provide_value_to_snake_case'],
             ['IHave_CombinationsFOO', 'i_have_combinations_f_o_o'],
             ['.,*#@azAZ  O_K...  & K.O.', '.,*#@az_a_z_  _o_k_...  & _k_._o_.'], // the function is not for a constant name
             ['.,*#@ ...  &', '.,*#@ ...  &'],
         ];
+    }
+
+    /**
+     * @test
+     * @dataProvider provideValueToClassBaseNameSnakeCase
+     * @param string|StringInterface $toConvert
+     * @param string $expectedResult
+     */
+    public function I_can_turn_to_class_base_name_snake_case_anything($toConvert, string $expectedResult)
+    {
+        self::assertSame($expectedResult, StringTools::camelCaseToSnakeCasedBasename($toConvert));
+    }
+
+    public function provideValueToClassBaseNameSnakeCase(): array
+    {
+        $values = $this->provideValueToSnakeCase();
+        $values[] = [new StringObject(__CLASS__), 'string_tools_test'];
+
+        return $values;
     }
 
     /**
