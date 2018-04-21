@@ -13,7 +13,7 @@ class StringObject extends Scalar implements StringInterface
      * @param bool $strict = true NULL raises an exception
      * @throws \Granam\String\Exceptions\WrongParameterType
      */
-    public function __construct($value, $strict = true)
+    public function __construct($value, bool $strict = true)
     {
         try {
             parent::__construct(ToString::toString($value, $strict));
@@ -27,13 +27,13 @@ class StringObject extends Scalar implements StringInterface
      * @param bool $withoutWhiteCharacters = false
      * @return bool
      */
-    public function isEmpty($withoutWhiteCharacters = false)
+    public function isEmpty(bool $withoutWhiteCharacters = false): bool
     {
         if (!$withoutWhiteCharacters) {
             return $this->getValue() === '';
         }
 
-        return trim($this->getValue()) === '';
+        return \trim($this->getValue()) === '';
     }
 
 }
