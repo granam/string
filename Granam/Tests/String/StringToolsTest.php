@@ -185,12 +185,12 @@ class StringToolsTest extends TestCase
     /**
      * @test
      * @dataProvider provideValuesToMakeConstant
-     * @param string $toConstant
-     * @param string $asConstant
+     * @param string $toConstantValue
+     * @param string $expectedConstantValue
      */
-    public function I_can_convert_any_string_to_constant_like_value(string $toConstant, string $asConstant)
+    public function I_can_convert_any_string_to_constant_like_value(string $toConstantValue, string $expectedConstantValue)
     {
-        self::assertSame($asConstant, StringTools::toConstant($toConstant));
+        self::assertSame($expectedConstantValue, StringTools::toConstantLikeValue($toConstantValue));
     }
 
     public function provideValuesToMakeConstant(): array
@@ -211,6 +211,17 @@ class StringToolsTest extends TestCase
             ],
             ['Bojovník a čaroděj – archetypy', 'bojovnik_a_carodej_archetypy'] // Czech with long dash (was problematic in some situations)
         ];
+    }
+
+    /**
+     * @test
+     * @dataProvider provideValuesToMakeConstant
+     * @param string $toConstantName
+     * @param string $asConstantValue
+     */
+    public function I_can_convert_any_string_to_constant_like_name(string $toConstantName, string $asConstantValue)
+    {
+        self::assertSame(\strtoupper($asConstantValue), StringTools::toConstantLikeName($toConstantName));
     }
 
     /**
@@ -255,12 +266,31 @@ class StringToolsTest extends TestCase
 
     /**
      * @test
+     * @dataProvider provideValueToClassBaseName
+     * @param $className
+     * @param string $expectedBaseName
+     */
+    public function I_can_get_class_basename(string $className, string $expectedBaseName)
+    {
+        self::assertSame($expectedBaseName, StringTools::getClassBaseName($className));
+    }
+
+    public function provideValueToClassBaseName(): array
+    {
+        return [
+            [__CLASS__, 'StringToolsTest'],
+            [new StringObject(\stdClass::class), 'stdClass'],
+        ];
+    }
+
+    /**
+     * @test
      * @dataProvider provideValueNameAndGetter
      * @param string $valueName
      * @param string $expectedGetter
      * @param string|null $prefix
      */
-    public function I_can_get_getter_for_any_name($valueName, $expectedGetter, $prefix = null)
+    public function I_can_get_getter_for_any_name(string $valueName, string $expectedGetter, string $prefix = null)
     {
         if ($prefix === null) {
             self::assertSame($expectedGetter, StringTools::assembleGetterForName($valueName));
@@ -285,7 +315,7 @@ class StringToolsTest extends TestCase
      * @param string $expectedSetter
      * @param string|null $prefix
      */
-    public function I_can_get_setter_for_any_name($valueName, $expectedSetter, $prefix = null)
+    public function I_can_get_setter_for_any_name(string $valueName, string $expectedSetter, $prefix = null)
     {
         if ($prefix === null) {
             self::assertSame($expectedSetter, StringTools::assembleSetterForName($valueName));
@@ -335,6 +365,15 @@ class StringToolsTest extends TestCase
     {
         self::assertSame('stringToolsTest', StringTools::assembleMethodName(__CLASS__));
         self::assertSame('fooStringToolsTest', StringTools::assembleMethodName(__CLASS__, 'foo'));
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_variable_name_from_any_value()
+    {
+        self::assertSame('stringToolsTest', StringTools::toVariableName(__CLASS__));
+        self::assertSame('krevTeceVzdyckyCervena', StringTools::toVariableName('Krev teče vždycky červená'));
     }
 
     /**
