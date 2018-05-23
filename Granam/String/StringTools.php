@@ -114,11 +114,12 @@ class StringTools extends StrictObject
     }
 
     /**
+     * Creates from 'Fóő, Bâr ảnd Bäz' constant-like value 'foo_bar_and_baz'
      * @param string|StringInterface $value
      * @return string
      * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
      */
-    public static function toConstant($value): string
+    public static function toConstantLikeValue($value): string
     {
         $withoutDiacritics = self::removeDiacritics($value);
         $underscored = \preg_replace('~[^a-zA-Z0-9]+~', '_', \trim($withoutDiacritics));
@@ -127,6 +128,30 @@ class StringTools extends StrictObject
     }
 
     /**
+     * Creates from 'Fóő, Bâr ảnd Bäz' constant-like value 'foo_bar_and_baz'
+     * @deprecated Use toConstantLikeValue instead
+     * @param string|StringInterface $value
+     * @return string
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
+     */
+    public static function toConstant($value): string
+    {
+        return static::toConstantLikeValue($value);
+    }
+
+    /**
+     * Creates from 'Fóő, Bâr ảnd Bäz' constant-like name 'FOO_BAR_AND_BAZ'
+     * @param string|StringInterface $value
+     * @return string
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
+     */
+    public static function toConstantLikeName($value): string
+    {
+        return \strtoupper(static::toConstantLikeValue($value));
+    }
+
+    /**
+     * Converts 'OnceUponATime' to 'once_upon_a_time'
      * @param string|StringInterface $value
      * @return string
      * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
@@ -141,19 +166,30 @@ class StringTools extends StrictObject
     }
 
     /**
+     * Converts '\Granam\String\StringTools' to 'StringTools' (removes namespace)
+     * @param string|StringInterface $className
+     * @return string
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
+     */
+    public static function getClassBaseName($className): string
+    {
+        $className = ToString::toString($className);
+        if (\preg_match('~(?<basename>[^\\\]+)$~u', $className, $matches) === 0) {
+            return $className; // no namespace at all
+        }
+
+        return $matches['basename']; // without namespace
+    }
+
+    /**
+     * Converts '\Granam\String\StringTools' to 'string_tools' (removes namespace and converts to snake_case)
      * @param string|StringInterface $className
      * @return string
      * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
      */
     public static function camelCaseToSnakeCasedBasename($className): string
     {
-        $className = ToString::toString($className);
-        $baseName = $className;
-        if (\preg_match('~(?<basename>[^\\\]+)$~u', $className, $matches) > 0) {
-            $baseName = $matches['basename'];
-        }
-
-        return static::camelCaseToSnakeCase($baseName);
+        return static::camelCaseToSnakeCase(static::getClassBaseName($className));
     }
 
     /**
@@ -190,6 +226,7 @@ class StringTools extends StrictObject
     }
 
     /**
+     * Converts '\Granam\String\StringObject α' with prefix 'define' into 'defineStringObjectA'
      * @param string|StringInterface $fromValue
      * @param string|StringInterface $prefix
      * @return string
@@ -197,20 +234,39 @@ class StringTools extends StrictObject
      */
     public static function assembleMethodName($fromValue, $prefix = ''): string
     {
-        $methodName = \implode(
-            \array_map(
-                function ($namePart) {
-                    return \ucfirst($namePart);
-                },
-                \explode('_', self::toConstant(self::camelCaseToSnakeCasedBasename($fromValue)))
-            )
-        );
-        $prefix = ToString::toString($prefix);
+        $methodName = static::toVariableName($fromValue);
         if ($prefix === '') {
-            return \lcfirst($methodName);
+            return $methodName;
+        }
+        $prefix = \trim(ToString::toString($prefix));
+        if ($prefix === '') {
+            return $methodName;
         }
 
-        return $prefix . $methodName;
+        return $prefix . \ucfirst($methodName);
+    }
+
+    /**
+     * Converts '\Granam\String\StringObject α' into 'stringObjectA'
+     * @param string|StringInterface $value
+     * @return string
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
+     */
+    public static function toVariableName($value): string
+    {
+        $variableName = \implode(
+            \array_map(
+                'ucfirst', // every part has upper-cased first letter
+                \explode(
+                    '_', // to get parts
+                    self::toConstantLikeValue( // removes diacritics
+                        self::camelCaseToSnakeCasedBasename($value) // removes namespace and replaces non-low-ascii by underscores
+                    )
+                )
+            )
+        );
+
+        return \lcfirst($variableName); // thisIsYourFancyVariableName
     }
 
     /**
