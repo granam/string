@@ -209,7 +209,9 @@ class StringToolsTest extends TestCase
                 'Voix ambiguë d\'un cœur qui au zéphyr préfère les jattes de kiwi',
                 'voix_ambigue_d_un_coeur_qui_au_zephyr_prefere_les_jattes_de_kiwi',
             ],
-            ['Bojovník a čaroděj – archetypy', 'bojovnik_a_carodej_archetypy'] // Czech with long dash (was problematic in some situations)
+            ['Bojovník a čaroděj – archetypy', 'bojovnik_a_carodej_archetypy'], // Czech with long dash (was problematic in some situations)
+            ['____', '_'],
+            ['   ', '_'],
         ];
     }
 

@@ -123,8 +123,14 @@ class StringTools extends StrictObject
     {
         $withoutDiacritics = self::removeDiacritics($value);
         $underscored = \preg_replace('~[^a-zA-Z0-9]+~', '_', \trim($withoutDiacritics));
+        $trimmed = \strtolower(\trim($underscored, '_'));
+        if ($trimmed !== '') {
+            return $trimmed;
+        }
 
-        return \strtolower(\trim($underscored, '_'));
+        return $value !== ''
+            ? '_'
+            : '';
     }
 
     /**
