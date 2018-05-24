@@ -114,7 +114,8 @@ class StringTools extends StrictObject
     }
 
     /**
-     * Creates from 'Fóő, Bâr ảnd Bäz' constant-like value 'foo_bar_and_baz'
+     * Creates from 'Fóő, Bâr ảnd Bäz' constant-like value 'foo_bar_and_baz'.
+     * This will NOT place_underscore before upper-cased character, 'ÜbberID' = 'ubberid', NOT 'ubber_i_d',
      * @param string|StringInterface $value
      * @return string
      * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
@@ -122,6 +123,7 @@ class StringTools extends StrictObject
     public static function toConstantLikeValue($value): string
     {
         $withoutDiacritics = self::removeDiacritics($value);
+        // also collapses multiple underscores to a single one (see the plus on end of char groups and no underscore inside)
         $underscored = \preg_replace('~[^a-zA-Z0-9]+~', '_', \trim($withoutDiacritics));
         $trimmed = \strtolower(\trim($underscored, '_'));
         if ($trimmed !== '') {

@@ -210,6 +210,7 @@ class StringToolsTest extends TestCase
                 'voix_ambigue_d_un_coeur_qui_au_zephyr_prefere_les_jattes_de_kiwi',
             ],
             ['Bojovník a čaroděj – archetypy', 'bojovnik_a_carodej_archetypy'], // Czech with long dash (was problematic in some situations)
+            ['Uiína      Sebesuki', 'uiina_sebesuki'], // more spaces are turned to a single underscore
             ['____', '_'],
             ['   ', '_'],
         ];
