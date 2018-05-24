@@ -159,7 +159,7 @@ class StringTools extends StrictObject
     public static function camelCaseToSnakeCase($value): string
     {
         $value = ToString::toString($value);
-        $parts = \preg_split('~([A-Z][a-z_]*)~', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $parts = \preg_split('~([[:upper:]][[:lower:]_]*)~u', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $underscored = \preg_replace('~_{2,}~', '_', \implode('_', $parts));
 
         return \strtolower($underscored);
@@ -174,7 +174,7 @@ class StringTools extends StrictObject
     public static function getClassBaseName($className): string
     {
         $className = ToString::toString($className);
-        if (\preg_match('~(?<basename>[^\\\]+)$~u', $className, $matches) === 0) {
+        if (\preg_match('~\\\(?<basename>[^\\\]+)$~u', $className, $matches) === 0) {
             return $className; // no namespace at all
         }
 

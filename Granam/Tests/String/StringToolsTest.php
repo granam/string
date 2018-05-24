@@ -374,6 +374,7 @@ class StringToolsTest extends TestCase
     {
         self::assertSame('stringToolsTest', StringTools::toVariableName(__CLASS__));
         self::assertSame('krevTeceVzdyckyCervena', StringTools::toVariableName('Krev teče vždycky červená'));
+        self::assertSame('vypocetPoctuOddelovacuZaSebou', StringTools::toVariableName('Výpočet počtu oddělovačů za sebou'));
     }
 
     /**
@@ -398,5 +399,13 @@ class StringToolsTest extends TestCase
     public function I_can_get_git_status_text_encoded_in_octal_as_utf_8()
     {
         self::assertSame('O životě', StringTools::octalToUtf8('O \305\276ivot\304\233'));
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_turn_camel_case_to_snake_case()
+    {
+        self::assertSame('vyz_pož_daž_huš_těš', StringTools::camelCaseToSnakeCase('VyzPožDažHušTěš'));
     }
 }
