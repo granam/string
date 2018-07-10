@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Granam\String;
 
 use Granam\Scalar\Tools\ToString;
@@ -318,7 +320,7 @@ class StringTools extends StrictObject
         return \iconv(self::getIconvEncodingForPlatform($sourceEncoding), 'UTF-8', $string);
     }
 
-    public static function getIconvEncodingForPlatform(string $isoEncoding)
+    public static function getIconvEncodingForPlatform(string $isoEncoding): string
     {
         if (\strtoupper(\strpos($isoEncoding, 3)) !== 'ISO' || \strtoupper(\substr(PHP_OS, 3)) !== 'WIN' /* windows */) {
             return $isoEncoding;

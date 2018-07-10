@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Granam\Tests\String;
 
 use Granam\Tests\ExceptionsHierarchy\Exceptions\AbstractExceptionsHierarchyTest;
@@ -8,7 +10,7 @@ class GranamStringExceptionsHierarchyTest extends AbstractExceptionsHierarchyTes
     /**
      * @return string
      */
-    protected function getTestedNamespace()
+    protected function getTestedNamespace(): string
     {
         return $this->getRootNamespace();
     }
@@ -16,18 +18,16 @@ class GranamStringExceptionsHierarchyTest extends AbstractExceptionsHierarchyTes
     /**
      * @return string
      */
-    protected function getRootNamespace()
+    protected function getRootNamespace(): string
     {
-        return str_replace('\Tests', '', __NAMESPACE__);
+        return \str_replace('\Tests', '', __NAMESPACE__);
     }
 
     /**
      * @return array|string[]
      */
-    protected function getExternalRootNamespaces()
+    protected function getExternalRootNamespaces(): array
     {
-        return [
-            'Granam\Scalar',
-        ];
+        return ['Granam\Scalar'];
     }
 }

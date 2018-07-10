@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace Granam\Tests\String;
 
 use Granam\String\StringInterface;
@@ -14,7 +16,7 @@ class StringToolsTest extends TestCase
      * @param string $value
      * @param string $expectedResult
      */
-    public function I_can_remove_diacritics_from_any_string($value, $expectedResult)
+    public function I_can_remove_diacritics_from_any_string($value, $expectedResult): void
     {
         self::assertSame($expectedResult, StringTools::removeDiacritics($value));
     }
@@ -188,7 +190,7 @@ class StringToolsTest extends TestCase
      * @param string $toConstantValue
      * @param string $expectedConstantValue
      */
-    public function I_can_convert_any_string_to_constant_like_value(string $toConstantValue, string $expectedConstantValue)
+    public function I_can_convert_any_string_to_constant_like_value(string $toConstantValue, string $expectedConstantValue): void
     {
         self::assertSame($expectedConstantValue, StringTools::toConstantLikeValue($toConstantValue));
     }
@@ -197,7 +199,7 @@ class StringToolsTest extends TestCase
     {
         /** For list of all pangrams see great @link http://clagnut.com/blog/2380/ */
         return [
-            ['¿Quién es?', 'quien_es'], // surrounding non-characters are just removed, not translated to underscores (spanish)
+            ['¿Quién es?', 'quien_es'], // surrounding non-characters are just removed, not translated to underscores (spanish): void
             ['Zing, dwarf jocks vex lymph, Qutb.', 'zing_dwarf_jocks_vex_lymph_qutb'], /** well, this is english, @link http://clagnut.com/blog/2380/#Perfect_pangrams_in_English_.2826_letters.29 */
             ['Příliš žluťoučký kůň úpěl ďábelské ódy', 'prilis_zlutoucky_kun_upel_dabelske_ody'], // Czech
             ['Høj bly gom vandt fræk sexquiz på wc', 'hoj_bly_gom_vandt_fraek_sexquiz_pa_wc'], // Danish
@@ -209,7 +211,7 @@ class StringToolsTest extends TestCase
                 'Voix ambiguë d\'un cœur qui au zéphyr préfère les jattes de kiwi',
                 'voix_ambigue_d_un_coeur_qui_au_zephyr_prefere_les_jattes_de_kiwi',
             ],
-            ['Bojovník a čaroděj – archetypy', 'bojovnik_a_carodej_archetypy'], // Czech with long dash (was problematic in some situations)
+            ['Bojovník a čaroděj – archetypy', 'bojovnik_a_carodej_archetypy'], // Czech with long dash (was problematic in some situations): void
             ['Uiína      Sebesuki', 'uiina_sebesuki'], // more spaces are turned to a single underscore
             ['____', '_'],
             ['   ', '_'],
@@ -222,7 +224,7 @@ class StringToolsTest extends TestCase
      * @param string $toConstantName
      * @param string $asConstantValue
      */
-    public function I_can_convert_any_string_to_constant_like_name(string $toConstantName, string $asConstantValue)
+    public function I_can_convert_any_string_to_constant_like_name(string $toConstantName, string $asConstantValue): void
     {
         self::assertSame(\strtoupper($asConstantValue), StringTools::toConstantLikeName($toConstantName));
     }
@@ -233,7 +235,7 @@ class StringToolsTest extends TestCase
      * @param string $toConvert
      * @param string $expectedResult
      */
-    public function I_can_turn_to_snake_case_anything($toConvert, string $expectedResult)
+    public function I_can_turn_to_snake_case_anything($toConvert, string $expectedResult): void
     {
         self::assertSame($expectedResult, StringTools::camelCaseToSnakeCasedBasename($toConvert));
     }
@@ -254,7 +256,7 @@ class StringToolsTest extends TestCase
      * @param string|StringInterface $toConvert
      * @param string $expectedResult
      */
-    public function I_can_turn_to_class_base_name_snake_case_anything($toConvert, string $expectedResult)
+    public function I_can_turn_to_class_base_name_snake_case_anything($toConvert, string $expectedResult): void
     {
         self::assertSame($expectedResult, StringTools::camelCaseToSnakeCasedBasename($toConvert));
     }
@@ -273,7 +275,7 @@ class StringToolsTest extends TestCase
      * @param $className
      * @param string $expectedBaseName
      */
-    public function I_can_get_class_basename(string $className, string $expectedBaseName)
+    public function I_can_get_class_basename(string $className, string $expectedBaseName): void
     {
         self::assertSame($expectedBaseName, StringTools::getClassBaseName($className));
     }
@@ -293,7 +295,7 @@ class StringToolsTest extends TestCase
      * @param string $expectedGetter
      * @param string|null $prefix
      */
-    public function I_can_get_getter_for_any_name(string $valueName, string $expectedGetter, string $prefix = null)
+    public function I_can_get_getter_for_any_name(string $valueName, string $expectedGetter, string $prefix = null): void
     {
         if ($prefix === null) {
             self::assertSame($expectedGetter, StringTools::assembleGetterForName($valueName));
@@ -318,7 +320,7 @@ class StringToolsTest extends TestCase
      * @param string $expectedSetter
      * @param string|null $prefix
      */
-    public function I_can_get_setter_for_any_name(string $valueName, string $expectedSetter, $prefix = null)
+    public function I_can_get_setter_for_any_name(string $valueName, string $expectedSetter, $prefix = null): void
     {
         if ($prefix === null) {
             self::assertSame($expectedSetter, StringTools::assembleSetterForName($valueName));
@@ -343,7 +345,7 @@ class StringToolsTest extends TestCase
      * @param string $expectedSetter
      * @param string|null $prefix
      */
-    public function I_can_get_is_method_for_any_name(string $valueName, string $expectedSetter, string $prefix = null)
+    public function I_can_get_is_method_for_any_name(string $valueName, string $expectedSetter, string $prefix = null): void
     {
         if ($prefix === null) {
             self::assertSame($expectedSetter, StringTools::assembleIsForName($valueName));
@@ -364,7 +366,7 @@ class StringToolsTest extends TestCase
     /**
      * @test
      */
-    public function I_can_create_any_method_name()
+    public function I_can_create_any_method_name(): void
     {
         self::assertSame('stringToolsTest', StringTools::assembleMethodName(__CLASS__));
         self::assertSame('fooStringToolsTest', StringTools::assembleMethodName(__CLASS__, 'foo'));
@@ -373,7 +375,7 @@ class StringToolsTest extends TestCase
     /**
      * @test
      */
-    public function I_can_get_variable_name_from_any_value()
+    public function I_can_get_variable_name_from_any_value(): void
     {
         self::assertSame('stringToolsTest', StringTools::toVariableName(__CLASS__));
         self::assertSame('krevTeceVzdyckyCervena', StringTools::toVariableName('Krev teče vždycky červená'));
@@ -383,7 +385,7 @@ class StringToolsTest extends TestCase
     /**
      * @test
      */
-    public function I_can_strip_BOM_from_utf8_string()
+    public function I_can_strip_BOM_from_utf8_string(): void
     {
         $utf8String = \mb_convert_encoding('Příliš', 'UTF-8');
         self::assertSame(
@@ -399,7 +401,7 @@ class StringToolsTest extends TestCase
     /**
      * @test
      */
-    public function I_can_get_git_status_text_encoded_in_octal_as_utf_8()
+    public function I_can_get_git_status_text_encoded_in_octal_as_utf_8(): void
     {
         self::assertSame('O životě', StringTools::octalToUtf8('O \305\276ivot\304\233'));
     }
@@ -407,7 +409,7 @@ class StringToolsTest extends TestCase
     /**
      * @test
      */
-    public function I_can_turn_camel_case_to_snake_case()
+    public function I_can_turn_camel_case_to_snake_case(): void
     {
         self::assertSame('vyz_pož_daž_huš_těš', StringTools::camelCaseToSnakeCase('VyzPožDažHušTěš'));
     }

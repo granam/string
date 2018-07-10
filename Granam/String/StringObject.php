@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace Granam\String;
 
 use Granam\Scalar\Scalar;
@@ -34,6 +36,11 @@ class StringObject extends Scalar implements StringInterface
         }
 
         return \trim($this->getValue()) === '';
+    }
+
+    public function getValue(): string
+    {
+        return parent::getValue();
     }
 
 }
