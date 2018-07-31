@@ -27,7 +27,9 @@
     "granam/scalar": "dev-master"
   },
   "suggest": {
-    "ext-intl": "*"
+    "ext-intl": "*",
+    "ext-iconv": "*",
+    "ext-mbstring": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0",
