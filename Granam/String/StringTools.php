@@ -320,8 +320,13 @@ class StringTools extends StrictObject
         return \iconv(self::getIconvEncodingForPlatform($sourceEncoding), 'UTF-8', $string);
     }
 
-    public static function getIconvEncodingForPlatform(string $isoEncoding): string
+    /**
+     * @param string|StringInterface $isoEncoding
+     * @return string
+     */
+    public static function getIconvEncodingForPlatform($isoEncoding): string
     {
+        $isoEncoding = ToString::toString($isoEncoding);
         if (\strtoupper(\strpos($isoEncoding, 3)) !== 'ISO' || \strtoupper(\substr(PHP_OS, 3)) !== 'WIN' /* windows */) {
             return $isoEncoding;
         }
@@ -353,11 +358,12 @@ class StringTools extends StrictObject
      * see @link https://stackoverflow.com/questions/22827239/how-to-make-git-properly-display-utf-8-encoded-pathnames-in-the-console-window
      * and @link https://stackoverflow.com/questions/34934653/iso-8859-1-octal-back-to-normal-characters
      *
-     * @param string $string
+     * @param string|StringInterface $string $string
      * @return string
      */
-    public static function octalToUtf8(string $string): string
+    public static function octalToUtf8($string): string
     {
+        $string = ToString::toString($string);
         /** @var array|string[][] $matches */
         if (!\preg_match_all('~(?<octal>[\\\]\d{3})~', $string, $matches)) {
             return $string;
@@ -369,5 +375,25 @@ class StringTools extends StrictObject
         }
 
         return $string;
+    }
+
+    /**
+     * 'Cześć, proszę pana' = 'czescProszcePana'
+     * @param string|StringInterface $value
+     * @return string
+     */
+    public static function toCamelCaseId($value): string
+    {
+        return static::toVariableName($value);
+    }
+
+    /**
+     * 'Cześć, proszę pana' = 'czesc_proszce_pana'
+     * @param string|StringInterface $value
+     * @return string
+     */
+    public static function toSnakeCaseId($value): string
+    {
+        return static::camelCaseToSnakeCase(static::toVariableName($value));
     }
 }

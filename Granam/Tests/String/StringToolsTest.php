@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Granam\Tests\String;
 
@@ -412,5 +412,25 @@ class StringToolsTest extends TestCase
     public function I_can_turn_camel_case_to_snake_case(): void
     {
         self::assertSame('vyz_pož_daž_huš_těš', StringTools::camelCaseToSnakeCase('VyzPožDažHušTěš'));
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_camel_cased_id_from_any_value(): void
+    {
+        self::assertSame('stringToolsTest', StringTools::toCamelCaseId(__CLASS__));
+        self::assertSame('krevTeceVzdyckyCervena', StringTools::toCamelCaseId('Krev teče vždycky červená'));
+        self::assertSame('vypocetPoctuOddelovacuZaSebou', StringTools::toCamelCaseId('Výpočet počtu oddělovačů za sebou'));
+    }
+
+    /**
+     * @test
+     */
+    public function I_can_get_snake_cased_id_from_any_value(): void
+    {
+        self::assertSame('string_tools_test', StringTools::toSnakeCaseId(__CLASS__));
+        self::assertSame('krev_tece_vzdycky_cervena', StringTools::toSnakeCaseId('Krev teče vždycky červená'));
+        self::assertSame('vypocet_poctu_oddelovacu_za_sebou', StringTools::toSnakeCaseId('Výpočet počtu oddělovačů za sebou'));
     }
 }
