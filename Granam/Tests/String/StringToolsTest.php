@@ -245,7 +245,7 @@ class StringToolsTest extends TestCase
         return [
             [__FUNCTION__, 'provide_value_to_snake_case'],
             [static::class . '\\' . 'IHave_VIPCombinationsFOO', 'i_have_vip_combinations_foo'],
-            ['.,*#@azAZ  O_K...  & K.O.', '.,*#@az_a_z_  _o_k_...  & _k_._o_.'], // the function is not for a constant name
+            ['.,*#@azAZ  O_K...  & K.O.', '.,*#@az_az  o_k...  & k.o.'], // the function is not for a constant name
             ['.,*#@ ...  &', '.,*#@ ...  &'],
         ];
     }
