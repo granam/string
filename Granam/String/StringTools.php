@@ -18,17 +18,12 @@ class StringTools extends StrictObject
     {
         $value = ToString::toString($value);
         $withoutDiacritics = '';
-        if (\function_exists('transliterator_transliterate')) {
-            $specialsReplaced = static::replaceSpecials($value);
-            \preg_match_all('~(?<words>\w*)(?<nonWords>\W*)~u', $specialsReplaced, $matches);
-            /** @noinspection ForeachSourceInspection */
-            foreach ($matches['words'] as $index => $word) {
-                $wordWithoutDiacritics = \transliterator_transliterate('Any-Latin; Latin-ASCII', $word);
-                $withoutDiacritics .= $wordWithoutDiacritics . $matches['nonWords'][$index];
-            }
-        } else {
-            $specialsReplaced = static::replaceSpecialsFallback($value);
-            $withoutDiacritics = static::removeDiacriticsFallback($specialsReplaced);
+        $specialsReplaced = static::replaceSpecials($value);
+        \preg_match_all('~(?<words>\w*)(?<nonWords>\W*)~u', $specialsReplaced, $matches);
+        /** @noinspection ForeachSourceInspection */
+        foreach ($matches['words'] as $index => $word) {
+            $wordWithoutDiacritics = \transliterator_transliterate('Any-Latin; Latin-ASCII', $word);
+            $withoutDiacritics .= $wordWithoutDiacritics . $matches['nonWords'][$index];
         }
 
         return $withoutDiacritics;
@@ -44,74 +39,6 @@ class StringTools extends StrictObject
             ['̱', '̤', '̩', 'Ə', 'ə', 'ʿ', 'ʾ', 'ʼ',],
             ['', '', '', 'E', 'e', "'", "'", "'",],
             $string
-        );
-    }
-
-    /**
-     * @param string $word
-     * @return string
-     */
-    protected static function removeDiacriticsFallback(string $word): string
-    {
-        $originalErrorReporting = \ini_get('error_reporting');
-        \ini_set('error_reporting', $originalErrorReporting | E_NOTICE);
-        $originalLocale = \setlocale(LC_CTYPE, 0);
-        \setlocale(LC_CTYPE, 'C.UTF-8');
-        $wordWithoutDiacritics = @\iconv('UTF - 8', 'ASCII//TRANSLIT', $word); // cause a notice if a problem occurs
-        $lastError = \error_get_last();
-        if ($lastError && $lastError['file'] === __FILE__
-            && $lastError['message'] === 'iconv(): Detected an illegal character in input string'
-        ) {
-            $wordWithoutDiacritics = '';
-            \preg_match_all('~.~u', $word, $characters);
-            /** @noinspection ForeachSourceInspection */
-            foreach ($characters[0] as $character) {
-                if (!\preg_match('~\w~u', $character)) {
-                    $wordWithoutDiacritics .= $character;
-                } else {
-                    $convertedLetter = @iconv('UTF-8', 'ASCII//TRANSLIT', $character); // cause a notice if a problem occurs
-                    if ($convertedLetter === false) {
-                        // this error also overwrites previous with iconv(), which is important for previous condition
-                        \trigger_error(
-                            "Could not convert character '{$character}', using '?' instead",
-                            E_USER_WARNING // warning level, therefore original error reporting can control it
-                        );
-                        $convertedLetter = '?';
-                    }
-                    $wordWithoutDiacritics .= $convertedLetter;
-                }
-            }
-        }
-        \setlocale(LC_CTYPE, $originalLocale);
-        \ini_set('error_reporting', $originalErrorReporting);
-
-        return $wordWithoutDiacritics;
-    }
-
-    /**
-     * @param $string
-     * @return string
-     */
-    protected static function replaceSpecialsFallback(string $string): string
-    {
-        return \str_replace(
-            [
-                'Æ', 'æ', 'Œ', 'œ', 'Ð', 'ð', 'Ŀ', 'ŀ', 'Ł', 'ł', 'S̱', 's̱', 'Đ', 'đ', 'ß', 'Ħ', 'ħ', 'Ä', 'ä',
-                'Þ', 'þ', 'Ŧ', 'ŧ', 'ĸ', 'I', 'ı', 'Ö', 'ö', 'Ø', 'ø', 'Ñ', 'ñ', 'Ŋ', 'ŋ',
-                'Ÿ', 'ÿ', 'Ü', 'ü', 'Ĳ', 'ĳ', 'ŉ', 'ſ',
-                // greece
-                'αυ', 'Α', 'α', 'ά', 'λ', 'φ', 'Β', 'β', 'ή', 'τ', 'Γ', 'γ', 'μ', 'Δ', 'δ', 'έ', 'Ε', 'ε', 'ψ', 'ι', 'ο', 'ν', 'Ζ', 'ζ', 'Η', 'η',
-                'Θ', 'θ', 'Ι', 'ώ', 'Κ', 'κ', 'π', 'Λ', 'Μ', 'υ', 'Ν', 'Ξ', 'ξ', 'Ο', 'ό', 'ρ', 'Π', 'Ρ', 'Σ', 'σ', 'ς', 'ί', 'Τ', 'Υ', 'ύ', 'Φ', 'Χ', 'χ', 'Ψ', 'Ω', 'ω',
-            ],
-            [
-                'Ae', 'ae', 'Oe', 'oe', 'D', 'd', 'L', 'l', 'L', 'l', 'S', 's', 'D', 'd', 'ss', 'H', 'h', 'A', 'a',
-                'TH', 'th', 'T', 't', 'q', 'I', 'i', 'O', 'o', 'O', 'o', 'N', 'n', 'N', 'n',
-                'Yu', 'yu', 'U', 'u', 'IJ', 'ij', "'n", 's',
-                // greece
-                'au', 'A', 'a', 'a', 'l', 'ph', 'B', 'b', 'e', 't', 'G', 'g', 'm', 'D', 'd', 'e', 'E', 'e', 'ps', 'i', 'o', 'n', 'Z', 'z', 'E', 'e',
-                'TH', 'th', 'I', 'o', 'K', 'k', 'p', 'L', 'M', 'y', 'N', 'X', 'x', 'O', 'o', 'r', 'P', 'R', 'S', 's', 's', 'i', 'T', 'Y', 'y', 'PH', 'CH', 'ch', 'PS', 'O', 'o'
-            ],
-            self::replaceSpecials(self::replaceSpecials($string))
         );
     }
 
@@ -169,7 +96,7 @@ class StringTools extends StrictObject
     public static function camelCaseToSnakeCase($value): string
     {
         $value = ToString::toString($value);
-        $parts = \preg_split('~([[:upper:]][[:lower:]_]*)~u', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $parts = \preg_split('~([[:upper:]][[:lower:]]+|_+)~u', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $underscored = \preg_replace('~_{2,}~', '_', \implode('_', $parts));
 
         return \strtolower($underscored);
@@ -312,45 +239,9 @@ class StringTools extends StrictObject
     public static function toUtf8(string $string, string $sourceEncoding): string
     {
         /** @link https://stackoverflow.com/questions/8233517/what-is-the-difference-between-iconv-and-mb-convert-encoding-in-php# */
-        if (\function_exists('mb_convert_encoding')) {
-            return \mb_convert_encoding($string, $sourceEncoding, 'UTF-8'); // works same regardless of platform
-        }
-
         // iconv is just a wrapper of C iconv function, therefore it is platform-related
-        return \iconv(self::getIconvEncodingForPlatform($sourceEncoding), 'UTF-8', $string);
-    }
-
-    /**
-     * @param string|StringInterface $isoEncoding
-     * @return string
-     */
-    public static function getIconvEncodingForPlatform($isoEncoding): string
-    {
-        $isoEncoding = ToString::toString($isoEncoding);
-        if (\strtoupper(\strpos($isoEncoding, 3)) !== 'ISO' || \strtoupper(\substr(PHP_OS, 3)) !== 'WIN' /* windows */) {
-            return $isoEncoding;
-        }
-        /** http://php.net/manual/en/function.iconv.php#71192 */
-        switch ($isoEncoding) {
-            case 'ISO-8859-2' :
-                return 'CP1250'; // Eastern European
-            case 'ISO-8859-5':
-                return 'CP1251'; // Cyrillic
-            case 'ISO-8859-1':
-                return 'CP1252'; // Western European
-            case 'ISO-8859-7':
-                return 'CP1253'; // Greek
-            case 'ISO-8859-9':
-                return 'CP1254'; // Turkish
-            case 'ISO-8859-8':
-                return 'CP1255'; // Hebrew
-            case 'ISO-8859-6':
-                return 'CP1256'; // Arabic
-            case 'ISO-8859-4':
-                return 'CP1257'; // Baltic
-            default :
-                return $isoEncoding;
-        }
+        // mb_convert_encoding works same regardless of platform
+        return \mb_convert_encoding($string, $sourceEncoding, 'UTF-8'); //
     }
 
     /**

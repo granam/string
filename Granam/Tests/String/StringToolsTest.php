@@ -235,7 +235,7 @@ class StringToolsTest extends TestCase
      * @param string $toConvert
      * @param string $expectedResult
      */
-    public function I_can_turn_to_snake_case_anything($toConvert, string $expectedResult): void
+    public function I_can_turn_to_snake_case_anything(string $toConvert, string $expectedResult): void
     {
         self::assertSame($expectedResult, StringTools::camelCaseToSnakeCasedBasename($toConvert));
     }
@@ -244,7 +244,7 @@ class StringToolsTest extends TestCase
     {
         return [
             [__FUNCTION__, 'provide_value_to_snake_case'],
-            ['IHave_CombinationsFOO', 'i_have_combinations_f_o_o'],
+            [static::class . '\\' . 'IHave_VIPCombinationsFOO', 'i_have_vip_combinations_foo'],
             ['.,*#@azAZ  O_K...  & K.O.', '.,*#@az_a_z_  _o_k_...  & _k_._o_.'], // the function is not for a constant name
             ['.,*#@ ...  &', '.,*#@ ...  &'],
         ];
@@ -411,6 +411,7 @@ class StringToolsTest extends TestCase
      */
     public function I_can_turn_camel_case_to_snake_case(): void
     {
+        self::assertSame('i_have_vip_combinations_foo', StringTools::camelCaseToSnakeCase('IHave_VIPCombinationsFOO'));
         self::assertSame('vyz_pož_daž_huš_těš', StringTools::camelCaseToSnakeCase('VyzPožDažHušTěš'));
     }
 

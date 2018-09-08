@@ -23,6 +23,8 @@
   },
   "require": {
     "php": ">=7.1",
+    "ext-intl": "*",
+    "ext-mbstring": "*",
     "granam/strict-object": "^3.0",
     "granam/scalar": "^4.0"
   },
