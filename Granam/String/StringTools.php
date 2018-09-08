@@ -96,7 +96,7 @@ class StringTools extends StrictObject
     public static function camelCaseToSnakeCase($value): string
     {
         $value = ToString::toString($value);
-        $parts = \preg_split('~([[:upper:]][[:lower:]]+|_+)~u', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $parts = \preg_split('~([[:upper:]][[:lower:]]+|[^[:upper:]]*[[:lower:]]+)~u', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $underscored = \preg_replace('~_{2,}~', '_', \implode('_', $parts));
 
         return \strtolower($underscored);
