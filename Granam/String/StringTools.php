@@ -66,10 +66,10 @@ class StringTools extends StrictObject
 
     /**
      * Creates from 'Fóő, Bâr ảnd Bäz' constant-like value 'foo_bar_and_baz'
-     * @deprecated Use toConstantLikeValue instead
      * @param string|StringInterface $value
      * @return string
      * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
+     * @deprecated Use toConstantLikeValue instead
      */
     public static function toConstant($value): string
     {
@@ -100,6 +100,23 @@ class StringTools extends StrictObject
         $underscored = \preg_replace('~_{2,}~', '_', \implode('_', $parts));
 
         return \strtolower($underscored);
+    }
+
+    /**
+     * Turns 'při__zdi' into PřiZdi
+     * @param string|StringInterface $value
+     * @return string
+     * @throws \Granam\Scalar\Tools\Exceptions\WrongParameterType
+     */
+    public static function snakeCaseToCamelCase($value): string
+    {
+        $value = ToString::toString($value);
+        $parts = explode('_', $value);
+        $camelCased = '';
+        foreach ($parts as $part) {
+            $camelCased .= mb_convert_case($part, MB_CASE_TITLE);
+        }
+        return $camelCased;
     }
 
     /**

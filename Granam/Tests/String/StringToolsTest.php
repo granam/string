@@ -418,6 +418,14 @@ class StringToolsTest extends TestCase
     /**
      * @test
      */
+    public function I_can_turn_snake_case_to_camel_case(): void
+    {
+        self::assertSame('VyzPožDažHušTěš', StringTools::snakeCaseToCamelCase('vyz_pož__daž_huš___těš'));
+    }
+
+    /**
+     * @test
+     */
     public function I_can_get_camel_cased_id_from_any_value(): void
     {
         self::assertSame('stringToolsTest', StringTools::toCamelCaseId(__CLASS__));
