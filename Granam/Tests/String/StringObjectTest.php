@@ -1,9 +1,9 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Granam\Tests\String;
 
 use Granam\Scalar\Scalar;
+use Granam\String\Exceptions\WrongParameterType;
 use Granam\String\StringObject;
 use PHPUnit\Framework\TestCase;
 
@@ -60,49 +60,49 @@ class StringObjectTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Granam\String\Exceptions\WrongParameterType
-     * @expectedExceptionMessageRegExp ~got NULL$~
      */
     public function I_can_not_use_null_by_default(): void
     {
+        $this->expectException(WrongParameterType::class);
+        $this->expectExceptionMessageRegExp('~got NULL$~');
         new StringObject(null);
     }
 
     /**
      * @test
-     * @expectedException \Granam\String\Exceptions\WrongParameterType
-     * @expectedExceptionMessageRegExp ~got NULL$~
      */
     public function I_can_not_use_null_if_strict(): void
     {
+        $this->expectException(WrongParameterType::class);
+        $this->expectExceptionMessageRegExp('~got NULL$~');
         new StringObject(null, true /* strict*/);
     }
 
     /**
      * @test
-     * @expectedException \Granam\String\Exceptions\WrongParameterType
      */
     public function I_can_not_create_string_object_from_array(): void
     {
+        $this->expectException(WrongParameterType::class);
         /** @noinspection PhpParamsInspection */
         new StringObject([]);
     }
 
     /**
      * @test
-     * @expectedException \Granam\String\Exceptions\WrongParameterType
      */
     public function I_can_not_create_string_object_from_resource(): void
     {
+        $this->expectException(WrongParameterType::class);
         new StringObject(tmpfile());
     }
 
     /**
      * @test
-     * @expectedException \Granam\String\Exceptions\WrongParameterType
      */
     public function I_can_not_create_string_object_from_object(): void
     {
+        $this->expectException(WrongParameterType::class);
         new StringObject(new \stdClass());
     }
 

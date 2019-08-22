@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Granam\Tests\String;
 
@@ -272,10 +271,10 @@ class StringToolsTest extends TestCase
     /**
      * @test
      * @dataProvider provideValueToClassBaseName
-     * @param $className
+     * @param string|StringInterface $className
      * @param string $expectedBaseName
      */
-    public function I_can_get_class_basename(string $className, string $expectedBaseName): void
+    public function I_can_get_class_basename($className, string $expectedBaseName): void
     {
         self::assertSame($expectedBaseName, StringTools::getClassBaseName($className));
     }
