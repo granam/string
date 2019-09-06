@@ -379,6 +379,7 @@ class StringToolsTest extends TestCase
         self::assertSame('stringToolsTest', StringTools::toVariableName(__CLASS__));
         self::assertSame('krevTeceVzdyckyCervena', StringTools::toVariableName('Krev teče vždycky červená'));
         self::assertSame('vypocetPoctuOddelovacuZaSebou', StringTools::toVariableName('Výpočet počtu oddělovačů za sebou'));
+        self::assertSame('flakonek02L', StringTools::toVariableName('flakonek_02l'));
     }
 
     /**
@@ -428,9 +429,13 @@ class StringToolsTest extends TestCase
     public function I_can_get_camel_cased_id_from_any_value(): void
     {
         self::assertSame('stringToolsTest', StringTools::toCamelCaseId(__CLASS__));
+        self::assertSame('stringToolsTest', StringTools::toCamelCaseId('stringToolsTest'));
         self::assertSame('krevTeceVzdyckyCervena', StringTools::toCamelCaseId('Krev teče vždycky červená'));
+        self::assertSame('krevTeceVzdyckyCervena', StringTools::toCamelCaseId('krevTeceVzdyckyCervena'));
         self::assertSame('vypocetPoctuOddelovacuZaSebou', StringTools::toCamelCaseId('Výpočet počtu oddělovačů za sebou'));
+        self::assertSame('vypocetPoctuOddelovacuZaSebou', StringTools::toCamelCaseId('vypocetPoctuOddelovacuZaSebou'));
         self::assertSame('flakonek02L', StringTools::toCamelCaseId('Flakónek (0.2 l)'));
+        self::assertSame('flakonek02L', StringTools::toCamelCaseId('flakonek02L'));
     }
 
     /**
@@ -439,8 +444,12 @@ class StringToolsTest extends TestCase
     public function I_can_get_snake_cased_id_from_any_value(): void
     {
         self::assertSame('string_tools_test', StringTools::toSnakeCaseId(__CLASS__));
+        self::assertSame('string_tools_test', StringTools::toSnakeCaseId('string_tools_test'));
         self::assertSame('krev_tece_vzdycky_cervena', StringTools::toSnakeCaseId('Krev teče vždycky červená'));
+        self::assertSame('krev_tece_vzdycky_cervena', StringTools::toSnakeCaseId('krev_tece_vzdycky_cervena'));
         self::assertSame('vypocet_poctu_oddelovacu_za_sebou', StringTools::toSnakeCaseId('Výpočet počtu oddělovačů za sebou'));
-        self::assertSame('flakonek_02l', StringTools::toSnakeCaseId('Flakónek (0.2 l)'));
+        self::assertSame('vypocet_poctu_oddelovacu_za_sebou', StringTools::toSnakeCaseId('vypocet_poctu_oddelovacu_za_sebou'));
+        self::assertSame('flakonek_02_l', StringTools::toSnakeCaseId('Flakónek (0.2 l)'));
+        self::assertSame('flakonek_02_l', StringTools::toSnakeCaseId('flakonek_02l'));
     }
 }

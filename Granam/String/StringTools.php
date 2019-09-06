@@ -28,11 +28,7 @@ class StringTools extends StrictObject
         return $withoutDiacritics;
     }
 
-    /**
-     * @param $string
-     * @return string
-     */
-    protected static function replaceSpecials($string): string
+    protected static function replaceSpecials(string $string): string
     {
         return \str_replace(
             ['̱', '̤', '̩', 'Ə', 'ə', 'ʿ', 'ʾ', 'ʼ',],
@@ -95,7 +91,7 @@ class StringTools extends StrictObject
     public static function camelCaseToSnakeCase($value): string
     {
         $value = ToString::toString($value);
-        $parts = \preg_split('~([[:upper:]][[:lower:]]+|[^[:upper:]]*[[:lower:]]+)~u', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $parts = \preg_split('~([[:upper:]][[:lower:]]+|[^[:upper:]\d]*[[:lower:]]+|\d+)~u', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $underscored = \preg_replace('~_{2,}~', '_', \implode('_', $parts));
 
         return \strtolower($underscored);
@@ -207,15 +203,16 @@ class StringTools extends StrictObject
      */
     public static function toVariableName($value): string
     {
+        $snakeCased = self::camelCaseToSnakeCasedBasename($value); // removes namespace and replaces non-low-ascii by underscores
+        $contantLike = self::toConstantLikeValue($snakeCased); // removes diacritics
+        $parts = \explode(
+            '_', // to get parts
+            $contantLike
+        );
         $variableName = \implode(
             \array_map(
                 'ucfirst', // every part has upper-cased first letter
-                \explode(
-                    '_', // to get parts
-                    self::toConstantLikeValue( // removes diacritics
-                        self::camelCaseToSnakeCasedBasename($value) // removes namespace and replaces non-low-ascii by underscores
-                    )
-                )
+                $parts
             )
         );
 
@@ -301,6 +298,7 @@ class StringTools extends StrictObject
      */
     public static function toSnakeCaseId($value): string
     {
-        return static::camelCaseToSnakeCase(static::toVariableName($value));
+        $asVariableName = static::toVariableName($value);
+        return static::camelCaseToSnakeCase($asVariableName);
     }
 }
