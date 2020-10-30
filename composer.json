@@ -26,18 +26,11 @@
     "ext-intl": "*",
     "ext-mbstring": "*",
     "granam/strict-object": "^3.0",
-    "granam/scalar": "^5.0"
-  },
-  "suggest": {
-    "ext-intl": "*",
-    "ext-iconv": "*",
-    "ext-mbstring": "*"
+    "granam/scalar": "^5.0",
+    "phpunit/phpunit": "^9.4"
   },
   "require-dev": {
     "mockery/mockery": "^1.2",
-    "granam/exceptions-hierarchy": "^5.0",
-    "phpunit/phpunit": "^8.3"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "granam/exceptions-hierarchy": "^5.0"
+  }
 }
