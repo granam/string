@@ -19,7 +19,6 @@ class StringTools extends StrictObject
         $withoutDiacritics = '';
         $specialsReplaced = static::replaceSpecials($value);
         \preg_match_all('~(?<words>\w*)(?<nonWords>\W*)~u', $specialsReplaced, $matches);
-        /** @noinspection ForeachSourceInspection */
         foreach ($matches['words'] as $index => $word) {
             $wordWithoutDiacritics = \transliterator_transliterate('Any-Latin; Latin-ASCII', $word);
             $withoutDiacritics .= $wordWithoutDiacritics . $matches['nonWords'][$index];

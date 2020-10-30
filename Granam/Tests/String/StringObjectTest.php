@@ -64,7 +64,7 @@ class StringObjectTest extends TestCase
     public function I_can_not_use_null_by_default(): void
     {
         $this->expectException(WrongParameterType::class);
-        $this->expectExceptionMessageRegExp('~got NULL$~');
+        $this->expectExceptionMessageMatches('~got NULL$~');
         new StringObject(null);
     }
 
@@ -74,7 +74,7 @@ class StringObjectTest extends TestCase
     public function I_can_not_use_null_if_strict(): void
     {
         $this->expectException(WrongParameterType::class);
-        $this->expectExceptionMessageRegExp('~got NULL$~');
+        $this->expectExceptionMessageMatches('~got NULL$~');
         new StringObject(null, true /* strict*/);
     }
 
