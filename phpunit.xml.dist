@@ -1,18 +1,15 @@
 <?xml version="1.0"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
-         bootstrap="./Granam/Tests/tests_bootstrap.php" convertErrorsToExceptions="true"
+         bootstrap="./tests/tests_bootstrap.php" convertErrorsToExceptions="true"
          convertNoticesToExceptions="true" convertWarningsToExceptions="true" stopOnFailure="true"
          processIsolation="false" backupGlobals="false" colors="true">
     <coverage includeUncoveredFiles="true" processUncoveredFiles="true">
         <include>
-            <directory>./Granam</directory>
+            <directory>./String</directory>
         </include>
-        <exclude>
-            <directory>./Granam/Tests</directory>
-        </exclude>
     </coverage>
     <testsuite name="all">
-        <directory>./Granam</directory>
+        <directory>./tests</directory>
     </testsuite>
 </phpunit>

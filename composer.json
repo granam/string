@@ -18,19 +18,28 @@
   "homepage": "https://github.com/jaroslavtyc/granam-string",
   "autoload": {
     "psr-4": {
-      "Granam\\": "Granam/"
+      "Granam\\String\\": "String"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Granam\\Tests\\String\\": "tests/String",
+      "Granam\\Tests\\ExceptionsHierarchy\\": "vendor/granam/exceptions-hierarchy/tests/ExceptionsHierarchy"
     }
   },
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.3",
     "ext-intl": "*",
     "ext-mbstring": "*",
-    "granam/strict-object": "^3.0",
+    "granam/strict-object": ">=3.0",
     "granam/scalar": "^5.0"
   },
   "require-dev": {
-    "mockery/mockery": "^1.2",
     "granam/exceptions-hierarchy": "^5.0",
-    "phpunit/phpunit": "^9.4"
+    "mockery/mockery": "^1.2",
+    "phpunit/phpunit": "^9.0"
+  },
+  "config": {
+    "sort-packages": true
   }
 }
