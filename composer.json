@@ -15,7 +15,7 @@
     "string",
     "object"
   ],
-  "homepage": "https://github.com/jaroslavtyc/granam-string",
+  "homepage": "https://github.com/granam/string",
   "autoload": {
     "psr-4": {
       "Granam\\String\\": "String"
@@ -28,16 +28,15 @@
     }
   },
   "require": {
-    "php": ">=7.3",
-    "ext-intl": "*",
-    "ext-mbstring": "*",
+    "php": ">=7.4",
     "granam/strict-object": ">=3.0",
     "granam/scalar": "^5.0"
   },
   "require-dev": {
     "granam/exceptions-hierarchy": "^5.0",
     "mockery/mockery": "^1.2",
-    "phpunit/phpunit": "^9.0"
+    "phpunit/phpunit": ">=9.0",
+    "rector/rector": "^0.14.2"
   },
   "config": {
     "sort-packages": true
