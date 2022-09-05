@@ -1,10 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Granam\String;
 
 use Granam\Scalar\Tools\ToString;
 use Granam\Strict\Object\StrictObject;
 
+/** @deprecated Use https://packagist.org/packages/granam/remove-diacritics instead */
 class StringTools extends StrictObject
 {
 
