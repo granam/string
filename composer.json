@@ -30,6 +30,7 @@
   "require": {
     "php": ">=7.4",
     "ext-intl": "*",
+    "ext-mbstring": "*",
     "granam/strict-object": ">=3.0",
     "granam/scalar": "^5.0"
   },
